@@ -3,27 +3,42 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>Welcome To Aiden's Safe Place</title>
 
+  <!-- Google Programmable Search -->
+  <script async src="https://cse.google.com/cse.js?cx=f46f21df2aa95439e"></script>
+
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      min-height: 100vh;
-      margin: 0;
-      background-color: #0d0d1a;
-      color: #fff;
-      padding-top: 80px;
+    * {
       box-sizing: border-box;
     }
 
-    h1 {
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Arial, sans-serif;
+      background: #0d0d1a;
+      color: white;
+    }
+
+    /* =========================
+       LOGIN SCREEN
+    ========================= */
+
+    #login-screen {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+
+    #login-screen h1 {
       font-size: 3rem;
       margin-bottom: 10px;
-      text-align: center;
-      color: #fff;
+
       text-shadow:
         0 0 5px #fff,
         0 0 10px #fff,
@@ -32,8 +47,7 @@
         0 0 40px #00d4ff;
     }
 
-    h2 {
-      font-size: 1.5rem;
+    #login-screen h2 {
       color: #e0e0e0;
       margin-bottom: 20px;
       text-shadow: 0 0 8px #00d4ff;
@@ -43,82 +57,372 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
     }
 
-    input[type="password"] {
-      padding: 10px 15px;
-      font-size: 1rem;
+    #passwordInput {
+      width: 250px;
+      padding: 12px 15px;
+
+      font-size: 16px;
+
       border: 2px solid #00d4ff;
-      border-radius: 5px;
-      background-color: #1a1a2e;
-      color: #fff;
+      border-radius: 6px;
+
+      background: #1a1a2e;
+      color: white;
+
       outline: none;
+
       box-shadow: 0 0 10px #00d4ff;
     }
 
-    button {
-      padding: 10px 20px;
-      font-size: 1rem;
-      color: #fff;
-      background-color: #00d4ff;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      box-shadow: 0 0 10px #00d4ff;
+    #passwordInput:focus {
+      box-shadow:
+        0 0 10px #00d4ff,
+        0 0 20px #00d4ff;
+    }
+
+    .login-button {
+      padding: 11px 25px;
+
+      font-size: 16px;
       font-weight: bold;
+
+      color: white;
+      background: #00d4ff;
+
+      border: none;
+      border-radius: 6px;
+
+      cursor: pointer;
+
+      box-shadow: 0 0 10px #00d4ff;
+
+      transition: 0.2s;
     }
 
-    button:hover {
-      background-color: #0099cc;
-      box-shadow: 0 0 15px #0099cc;
+    .login-button:hover {
+      background: #0099cc;
+
+      box-shadow:
+        0 0 10px #0099cc,
+        0 0 20px #0099cc;
     }
 
     #message {
-      margin-top: 15px;
-      font-size: 1.2rem;
+      margin-top: 5px;
+      font-size: 18px;
       font-weight: bold;
     }
 
-    /* Search section */
-    #search-section {
+
+    /* =========================
+       BROWSER
+    ========================= */
+
+    #browser {
       display: none;
-      width: 90%;
+      width: 100%;
+      min-height: 100vh;
+      background: #10101c;
+    }
+
+
+    /* TOP BAR */
+
+    .browser-top {
+      height: 65px;
+
+      display: flex;
+      align-items: center;
+
+      gap: 8px;
+
+      padding: 10px 15px;
+
+      background: #151522;
+
+      border-bottom: 1px solid #29293d;
+
+      box-shadow: 0 2px 15px rgba(0, 212, 255, 0.15);
+    }
+
+
+    /* NAVIGATION BUTTONS */
+
+    .nav-button {
+      width: 38px;
+      height: 38px;
+
+      border: none;
+      border-radius: 6px;
+
+      background: #202033;
+
+      color: #aaa;
+
+      font-size: 18px;
+
+      cursor: pointer;
+
+      transition: 0.2s;
+    }
+
+    .nav-button:hover {
+      background: #292943;
+      color: white;
+    }
+
+
+    /* ADDRESS BAR */
+
+    .address-bar {
+      flex: 1;
+
+      height: 40px;
+
+      display: flex;
+      align-items: center;
+
+      padding: 0 15px;
+
+      background: #0d0d18;
+
+      border: 1px solid #30304a;
+
+      border-radius: 20px;
+
+      color: #888;
+
+      font-size: 14px;
+
+      overflow: hidden;
+    }
+
+    .address-icon {
+      margin-right: 9px;
+      color: #00d4ff;
+    }
+
+    #addressText {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+
+    /* =========================
+       TAB
+    ========================= */
+
+    .tab-bar {
+      height: 40px;
+
+      display: flex;
+      align-items: flex-end;
+
+      padding-left: 15px;
+
+      background: #0c0c15;
+    }
+
+    .tab {
+      height: 34px;
+
+      min-width: 180px;
+
+      padding: 8px 15px;
+
+      background: #151522;
+
+      border-radius: 8px 8px 0 0;
+
+      color: #ddd;
+
+      font-size: 13px;
+    }
+
+    .tab::before {
+      content: "🌐";
+      margin-right: 8px;
+    }
+
+
+    /* =========================
+       PAGE
+    ========================= */
+
+    .browser-page {
+      min-height: calc(100vh - 105px);
+
+      padding: 50px 20px;
+
+      background:
+        radial-gradient(
+          circle at top,
+          rgba(0, 212, 255, 0.08),
+          transparent 40%
+        );
+    }
+
+    .browser-title {
+      text-align: center;
+
+      font-size: 34px;
+
+      margin-bottom: 10px;
+
+      text-shadow:
+        0 0 10px #00d4ff;
+    }
+
+    .browser-subtitle {
+      text-align: center;
+
+      color: #888;
+
+      margin-bottom: 35px;
+    }
+
+
+    /* GOOGLE SEARCH CONTAINER */
+
+    .search-container {
+      width: 95%;
       max-width: 1000px;
+
+      margin: auto;
+
+      padding: 25px;
+
+      background: rgba(20, 20, 35, 0.9);
+
+      border: 1px solid #292943;
+
+      border-radius: 12px;
+
+      box-shadow:
+        0 0 25px rgba(0, 212, 255, 0.1);
+    }
+
+
+    /* GOOGLE OVERRIDES */
+
+    .gsc-control-cse {
+      background: transparent !important;
+      border: none !important;
+
+      padding: 0 !important;
+    }
+
+    .gsc-search-box {
+      margin-bottom: 15px !important;
+    }
+
+    .gsc-input-box {
+      background: #11111f !important;
+
+      border: 1px solid #33334d !important;
+
+      border-radius: 6px !important;
+    }
+
+    input.gsc-input {
+      color: white !important;
+    }
+
+    .gsc-search-button-v2 {
+      background: #00d4ff !important;
+
+      border: none !important;
+
+      border-radius: 6px !important;
+
+      padding: 10px 20px !important;
+    }
+
+    .gsc-search-button-v2:hover {
+      background: #0099cc !important;
+    }
+
+    .gsc-result {
+      background: transparent !important;
+      border-bottom: 1px solid #292943 !important;
+    }
+
+    .gs-title {
+      color: #00d4ff !important;
+    }
+
+    .gs-visibleUrl {
+      color: #00ffcc !important;
+    }
+
+    .gs-webResult .gs-snippet {
+      color: #ccc !important;
+    }
+
+
+    /* FOOTER */
+
+    .browser-footer {
+      text-align: center;
+
+      color: #555;
+
+      font-size: 12px;
+
       margin-top: 30px;
     }
 
-    .search-box {
-      background: #111122;
-      border: 1px solid #00d4ff;
-      border-radius: 10px;
-      padding: 20px;
-      box-shadow: 0 0 20px rgba(0, 212, 255, 0.25);
+
+    /* MOBILE */
+
+    @media (max-width: 600px) {
+
+      #login-screen h1 {
+        font-size: 2rem;
+      }
+
+      .browser-top {
+        padding: 8px;
+      }
+
+      .nav-button {
+        width: 32px;
+        height: 32px;
+      }
+
+      .address-bar {
+        height: 34px;
+        font-size: 12px;
+      }
+
+      .tab {
+        min-width: 150px;
+      }
+
+      .browser-page {
+        padding: 30px 10px;
+      }
+
+      .search-container {
+        width: 100%;
+        padding: 10px;
+      }
     }
 
-    .search-title {
-      text-align: center;
-      color: #00d4ff;
-      font-size: 1.5rem;
-      margin-bottom: 15px;
-    }
-
-    /* Google search styling */
-    .gsc-control-cse {
-      background-color: transparent !important;
-      border: none !important;
-    }
-
-    .gsc-search-box-tools .gsc-search-box {
-      margin-bottom: 10px;
-    }
   </style>
-
-  <!-- Google Programmable Search -->
-  <script async src="https://cse.google.com/cse.js?cx=f46f21df2aa95439e"></script>
 </head>
 
+
 <body>
+
+
+  <!-- =========================
+       LOGIN
+  ========================= -->
 
   <div id="login-screen">
 
@@ -132,9 +436,15 @@
         type="password"
         id="passwordInput"
         placeholder="Enter password"
+        autocomplete="off"
       >
 
-      <button onclick="checkPassword()">Submit</button>
+      <button
+        class="login-button"
+        onclick="checkPassword()"
+      >
+        Submit
+      </button>
 
       <div id="message"></div>
 
@@ -143,22 +453,104 @@
   </div>
 
 
-  <!-- SEARCH PAGE -->
 
-  <div id="search-section">
+  <!-- =========================
+       BROWSER
+  ========================= -->
 
-    <div class="search-box">
+  <div id="browser">
 
-      <div class="search-title">
-        🔎 Search The Web
+
+    <!-- TOP NAVIGATION -->
+
+    <div class="browser-top">
+
+      <button
+        class="nav-button"
+        onclick="goBack()"
+        title="Back"
+      >
+        ←
+      </button>
+
+      <button
+        class="nav-button"
+        onclick="goForward()"
+        title="Forward"
+      >
+        →
+      </button>
+
+      <button
+        class="nav-button"
+        onclick="reloadPage()"
+        title="Reload"
+      >
+        ⟳
+      </button>
+
+
+      <div class="address-bar">
+
+        <span class="address-icon">
+          🔒
+        </span>
+
+        <span id="addressText">
+          Search the Web
+        </span>
+
       </div>
-
-      <div class="gcse-search"></div>
 
     </div>
 
+
+
+    <!-- TAB -->
+
+    <div class="tab-bar">
+
+      <div class="tab">
+        Aiden's Safe Place
+      </div>
+
+    </div>
+
+
+
+    <!-- PAGE -->
+
+    <main class="browser-page">
+
+      <div class="browser-title">
+        Search The Web
+      </div>
+
+      <div class="browser-subtitle">
+        Search from inside Aiden's Safe Place
+      </div>
+
+
+      <div class="search-container">
+
+        <div class="gcse-search"></div>
+
+      </div>
+
+
+      <div class="browser-footer">
+        Aiden's Safe Place • Web Search
+      </div>
+
+    </main>
+
   </div>
 
+
+
+  <!-- =========================
+       JAVASCRIPT
+  ========================= -->
 
   <script>
 
@@ -173,34 +565,74 @@
       if (input === "1234") {
 
         message.style.color = "#00ffcc";
-        message.style.textShadow = "0 0 10px #00ffcc";
-        message.textContent = "Access Granted!";
 
-        // Hide login
-        document.getElementById("login-screen").style.display = "none";
+        message.style.textShadow =
+          "0 0 10px #00ffcc";
 
-        // Show search
-        document.getElementById("search-section").style.display = "block";
+        message.textContent =
+          "Access Granted!";
+
+        setTimeout(function() {
+
+          document.getElementById("login-screen").style.display =
+            "none";
+
+          document.getElementById("browser").style.display =
+            "block";
+
+        }, 500);
 
       } else {
 
         message.style.color = "#ff0055";
-        message.style.textShadow = "0 0 10px #ff0055";
-        message.textContent = "Incorrect Password. Try again.";
+
+        message.style.textShadow =
+          "0 0 10px #ff0055";
+
+        message.textContent =
+          "Incorrect Password. Try again.";
 
       }
 
     }
 
-    // Allow Enter key to submit password
-    document.getElementById("passwordInput")
+
+    /* Enter key */
+
+    document
+      .getElementById("passwordInput")
       .addEventListener("keydown", function(event) {
 
         if (event.key === "Enter") {
+
           checkPassword();
+
         }
 
       });
+
+
+    /* Browser-style buttons */
+
+    function goBack() {
+
+      window.history.back();
+
+    }
+
+
+    function goForward() {
+
+      window.history.forward();
+
+    }
+
+
+    function reloadPage() {
+
+      location.reload();
+
+    }
 
   </script>
 
