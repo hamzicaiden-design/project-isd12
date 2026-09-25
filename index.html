@@ -1,40 +1,29 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <title>Aiden's Safe Place</title>
+  <title>Welcome To Aiden's Safe Place</title>
 
   <style>
-    * {
-      box-sizing: border-box;
-    }
-
     body {
       font-family: Arial, sans-serif;
-      margin: 0;
-      min-height: 100vh;
-      background: #0d0d1a;
-      color: white;
-    }
-
-    /* LOGIN SCREEN */
-
-    #loginScreen {
-      min-height: 100vh;
       display: flex;
       flex-direction: column;
-      justify-content: center;
       align-items: center;
-      text-align: center;
+      min-height: 100vh;
+      margin: 0;
+      background-color: #0d0d1a;
+      color: #fff;
+      padding-top: 80px;
+      box-sizing: border-box;
     }
 
     h1 {
       font-size: 3rem;
       margin-bottom: 10px;
-
+      text-align: center;
+      color: #fff;
       text-shadow:
         0 0 5px #fff,
         0 0 10px #fff,
@@ -44,353 +33,176 @@
     }
 
     h2 {
+      font-size: 1.5rem;
       color: #e0e0e0;
       margin-bottom: 20px;
       text-shadow: 0 0 8px #00d4ff;
     }
 
-    #passwordInput {
-      padding: 12px 15px;
-      width: 250px;
+    .login-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
 
+    input[type="password"] {
+      padding: 10px 15px;
       font-size: 1rem;
-
       border: 2px solid #00d4ff;
       border-radius: 5px;
-
-      background: #1a1a2e;
-      color: white;
-
+      background-color: #1a1a2e;
+      color: #fff;
       outline: none;
-
       box-shadow: 0 0 10px #00d4ff;
     }
 
     button {
-      padding: 12px 20px;
-      margin-top: 10px;
-
+      padding: 10px 20px;
       font-size: 1rem;
-      font-weight: bold;
-
-      color: white;
-      background: #00d4ff;
-
+      color: #fff;
+      background-color: #00d4ff;
       border: none;
       border-radius: 5px;
-
       cursor: pointer;
-
       box-shadow: 0 0 10px #00d4ff;
+      font-weight: bold;
     }
 
     button:hover {
-      background: #0099cc;
+      background-color: #0099cc;
       box-shadow: 0 0 15px #0099cc;
     }
 
     #message {
       margin-top: 15px;
+      font-size: 1.2rem;
       font-weight: bold;
     }
 
-
-    /* BROWSER SCREEN */
-
-    #browserScreen {
+    /* Search section */
+    #search-section {
       display: none;
-      min-height: 100vh;
+      width: 90%;
+      max-width: 1000px;
+      margin-top: 30px;
     }
 
-
-    /* TOP BAR */
-
-    .topbar {
-      height: 65px;
-
-      display: flex;
-      align-items: center;
-
-      padding: 10px 15px;
-
+    .search-box {
       background: #111122;
-
-      border-bottom: 2px solid #00d4ff;
-
-      box-shadow: 0 0 15px #00d4ff;
-    }
-
-    .logo {
-      font-size: 20px;
-      font-weight: bold;
-
-      margin-right: 15px;
-
-      color: #00d4ff;
-    }
-
-
-    /* SEARCH BAR */
-
-    .searchForm {
-      display: flex;
-
-      flex: 1;
-
-      max-width: 900px;
-      margin: auto;
-    }
-
-    .searchForm input {
-      flex: 1;
-
-      padding: 12px 15px;
-
-      font-size: 16px;
-
-      border: 2px solid #00d4ff;
-      border-right: none;
-
-      border-radius: 6px 0 0 6px;
-
-      outline: none;
-
-      background: #1a1a2e;
-      color: white;
-    }
-
-    .searchForm button {
-      margin: 0;
-
-      border-radius: 0 6px 6px 0;
-
-      box-shadow: none;
-    }
-
-
-    /* HOME */
-
-    #home {
-      min-height: calc(100vh - 65px);
-
-      display: flex;
-      flex-direction: column;
-
-      justify-content: center;
-      align-items: center;
-
-      text-align: center;
-    }
-
-    #home h1 {
-      font-size: 4rem;
-      margin-bottom: 5px;
-    }
-
-    #home p {
-      color: #aaa;
-      font-size: 18px;
-    }
-
-
-    /* QUICK BUTTONS */
-
-    .quickLinks {
-      margin-top: 25px;
-
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-
-    .quickLinks button {
-      margin: 0;
-      background: #1a1a2e;
       border: 1px solid #00d4ff;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 0 20px rgba(0, 212, 255, 0.25);
     }
 
-    .quickLinks button:hover {
-      background: #00d4ff;
+    .search-title {
+      text-align: center;
+      color: #00d4ff;
+      font-size: 1.5rem;
+      margin-bottom: 15px;
+    }
+
+    /* Google search styling */
+    .gsc-control-cse {
+      background-color: transparent !important;
+      border: none !important;
+    }
+
+    .gsc-search-box-tools .gsc-search-box {
+      margin-bottom: 10px;
     }
   </style>
-</head>
 
+  <!-- Google Programmable Search -->
+  <script async src="https://cse.google.com/cse.js?cx=f46f21df2aa95439e"></script>
+</head>
 
 <body>
 
-
-  <!-- ========================= -->
-  <!-- LOGIN -->
-  <!-- ========================= -->
-
-  <div id="loginScreen">
+  <div id="login-screen">
 
     <h1>Welcome To Aiden's Safe Place</h1>
 
     <h2>Type In Password</h2>
 
-    <input
-      type="password"
-      id="passwordInput"
-      placeholder="Enter password"
-    >
+    <div class="login-container">
 
-    <button onclick="checkPassword()">
-      Submit
-    </button>
-
-    <div id="message"></div>
-
-  </div>
-
-
-
-  <!-- ========================= -->
-  <!-- BROWSER -->
-  <!-- ========================= -->
-
-  <div id="browserScreen">
-
-
-    <!-- TOP BAR -->
-
-    <div class="topbar">
-
-      <div class="logo">
-        AIDEN
-      </div>
-
-
-      <!-- SEARCH -->
-
-      <form
-        class="searchForm"
-        action="https://duckduckgo.com/"
-        method="GET"
-        target="_blank"
+      <input
+        type="password"
+        id="passwordInput"
+        placeholder="Enter password"
       >
 
-        <input
-          type="text"
-          name="q"
-          placeholder="Search the web..."
-          autocomplete="off"
-        >
+      <button onclick="checkPassword()">Submit</button>
 
-        <button type="submit">
-          Search
-        </button>
-
-      </form>
+      <div id="message"></div>
 
     </div>
-
-
-
-    <!-- HOME -->
-
-    <div id="home">
-
-      <h1>
-        Search
-      </h1>
-
-      <p>
-        Search the web with DuckDuckGo
-      </p>
-
-
-      <div class="quickLinks">
-
-        <button onclick="openSite('https://duckduckgo.com')">
-          DuckDuckGo
-        </button>
-
-        <button onclick="openSite('https://github.com')">
-          GitHub
-        </button>
-
-        <button onclick="openSite('https://www.google.com')">
-          Google
-        </button>
-
-      </div>
-
-    </div>
-
 
   </div>
 
 
+  <!-- SEARCH PAGE -->
 
-  <!-- ========================= -->
-  <!-- JAVASCRIPT -->
-  <!-- ========================= -->
+  <div id="search-section">
+
+    <div class="search-box">
+
+      <div class="search-title">
+        🔎 Search The Web
+      </div>
+
+      <div class="gcse-search"></div>
+
+    </div>
+
+  </div>
+
 
   <script>
 
-
     function checkPassword() {
 
-      const password =
+      const input =
         document.getElementById("passwordInput").value;
 
       const message =
         document.getElementById("message");
 
-
-      if (password === "1234") {
+      if (input === "1234") {
 
         message.style.color = "#00ffcc";
+        message.style.textShadow = "0 0 10px #00ffcc";
+        message.textContent = "Access Granted!";
 
-        message.style.textShadow =
-          "0 0 10px #00ffcc";
+        // Hide login
+        document.getElementById("login-screen").style.display = "none";
 
-        message.textContent =
-          "Access Granted!";
-
-
-        setTimeout(function() {
-
-          document.getElementById("loginScreen").style.display =
-            "none";
-
-          document.getElementById("browserScreen").style.display =
-            "block";
-
-        }, 500);
-
+        // Show search
+        document.getElementById("search-section").style.display = "block";
 
       } else {
 
         message.style.color = "#ff0055";
-
-        message.style.textShadow =
-          "0 0 10px #ff0055";
-
-        message.textContent =
-          "Incorrect Password. Try again.";
+        message.style.textShadow = "0 0 10px #ff0055";
+        message.textContent = "Incorrect Password. Try again.";
 
       }
 
     }
 
+    // Allow Enter key to submit password
+    document.getElementById("passwordInput")
+      .addEventListener("keydown", function(event) {
 
+        if (event.key === "Enter") {
+          checkPassword();
+        }
 
-    function openSite(url) {
-
-      window.open(
-        url,
-        "_blank"
-      );
-
-    }
-
+      });
 
   </script>
 
-
 </body>
 </html>
-```
