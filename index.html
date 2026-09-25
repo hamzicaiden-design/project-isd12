@@ -1,9 +1,11 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Welcome To Aiden's Safe Place</title>
+
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -11,7 +13,7 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      height: 100vh;
+      min-height: 100vh;
       margin: 0;
       background-color: #0d0d1a;
       color: #fff;
@@ -77,35 +79,82 @@
       font-size: 1.2rem;
       font-weight: bold;
     }
+
+    /* Browser */
+    #browser {
+      display: none;
+      width: 90%;
+      height: 75vh;
+      margin-top: 25px;
+      border: 2px solid #00d4ff;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 0 25px #00d4ff;
+      background: #111;
+    }
+
+    #browser iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
   </style>
 </head>
+
 <body>
 
   <h1>Welcome To Aiden's Safe Place</h1>
   <h2>Type In Password</h2>
 
-  <div class="login-container">
-    <input type="password" id="passwordInput" placeholder="Enter password">
+  <div class="login-container" id="login">
+    <input
+      type="password"
+      id="passwordInput"
+      placeholder="Enter password"
+    >
+
     <button onclick="checkPassword()">Submit</button>
+
     <div id="message"></div>
+  </div>
+
+  <!-- Embedded Browser -->
+  <div id="browser">
+    <iframe
+      src="https://duckduckgo.com"
+      title="DuckDuckGo">
+    </iframe>
   </div>
 
   <script>
     function checkPassword() {
       const input = document.getElementById("passwordInput").value;
       const message = document.getElementById("message");
+      const browser = document.getElementById("browser");
+      const login = document.getElementById("login");
 
       if (input === "1234") {
+
         message.style.color = "#00ffcc";
         message.style.textShadow = "0 0 10px #00ffcc";
         message.textContent = "Access Granted!";
+
+        // Show browser
+        browser.style.display = "block";
+
+        // Hide login
+        login.style.display = "none";
+
       } else {
+
         message.style.color = "#ff0055";
         message.style.textShadow = "0 0 10px #ff0055";
         message.textContent = "Incorrect Password. Try again.";
+
       }
     }
   </script>
 
 </body>
 </html>
+```
