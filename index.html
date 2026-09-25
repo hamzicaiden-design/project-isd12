@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Test Page</title>
+  <title>Welcome To Aiden's Safe Place</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -13,24 +13,99 @@
       align-items: center;
       height: 100vh;
       margin: 0;
-      background-color: #f4f4f9;
-      color: #333;
+      background-color: #0d0d1a;
+      color: #fff;
     }
+
     h1 {
-      font-size: 4rem;
-      margin: 0;
+      font-size: 3rem;
+      margin-bottom: 10px;
+      text-align: center;
+      color: #fff;
+      text-shadow:
+        0 0 5px #fff,
+        0 0 10px #fff,
+        0 0 20px #00d4ff,
+        0 0 30px #00d4ff,
+        0 0 40px #00d4ff;
     }
+
     h2 {
-      font-size: 2rem;
-      color: #666;
-      margin-top: 10px;
+      font-size: 1.5rem;
+      color: #e0e0e0;
+      margin-bottom: 20px;
+      text-shadow: 0 0 8px #00d4ff;
+    }
+
+    .login-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+
+    input[type="password"] {
+      padding: 10px 15px;
+      font-size: 1rem;
+      border: 2px solid #00d4ff;
+      border-radius: 5px;
+      background-color: #1a1a2e;
+      color: #fff;
+      outline: none;
+      box-shadow: 0 0 10px #00d4ff;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 1rem;
+      color: #fff;
+      background-color: #00d4ff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      box-shadow: 0 0 10px #00d4ff;
+      font-weight: bold;
+    }
+
+    button:hover {
+      background-color: #0099cc;
+      box-shadow: 0 0 15px #0099cc;
+    }
+
+    #message {
+      margin-top: 15px;
+      font-size: 1.2rem;
+      font-weight: bold;
     }
   </style>
 </head>
 <body>
 
-  <h1>Test</h1>
-  <h2>test</h2>
+  <h1>Welcome To Aiden's Safe Place</h1>
+  <h2>Type In Password</h2>
+
+  <div class="login-container">
+    <input type="password" id="passwordInput" placeholder="Enter password">
+    <button onclick="checkPassword()">Submit</button>
+    <div id="message"></div>
+  </div>
+
+  <script>
+    function checkPassword() {
+      const input = document.getElementById("passwordInput").value;
+      const message = document.getElementById("message");
+
+      if (input === "1234") {
+        message.style.color = "#00ffcc";
+        message.style.textShadow = "0 0 10px #00ffcc";
+        message.textContent = "Access Granted!";
+      } else {
+        message.style.color = "#ff0055";
+        message.style.textShadow = "0 0 10px #ff0055";
+        message.textContent = "Incorrect Password. Try again.";
+      }
+    }
+  </script>
 
 </body>
 </html>
