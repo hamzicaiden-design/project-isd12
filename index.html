@@ -4,10 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Welcome To Aiden's Safe Place</title>
-
-  <!-- Google Programmable Search -->
-  <script async src="https://cse.google.com/cse.js?cx=f46f21df2aa95439e"></script>
+  <title>Aiden's Browser</title>
 
   <style>
     * {
@@ -16,18 +13,19 @@
 
     body {
       margin: 0;
-      min-height: 100vh;
       font-family: Arial, sans-serif;
       background: #0d0d1a;
       color: white;
+      height: 100vh;
+      overflow: hidden;
     }
 
     /* =========================
-       LOGIN SCREEN
+       LOGIN
     ========================= */
 
-    #login-screen {
-      min-height: 100vh;
+    #login {
+      height: 100vh;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -35,84 +33,64 @@
       text-align: center;
     }
 
-    #login-screen h1 {
+    #login h1 {
       font-size: 3rem;
-      margin-bottom: 10px;
+      margin: 0 0 10px;
 
       text-shadow:
-        0 0 5px #fff,
-        0 0 10px #fff,
+        0 0 5px white,
+        0 0 10px white,
         0 0 20px #00d4ff,
         0 0 30px #00d4ff,
         0 0 40px #00d4ff;
     }
 
-    #login-screen h2 {
-      color: #e0e0e0;
-      margin-bottom: 20px;
-      text-shadow: 0 0 8px #00d4ff;
+    #login h2 {
+      color: #ddd;
+      margin-bottom: 25px;
     }
 
-    .login-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 12px;
-    }
+    #password {
+      width: 260px;
+      padding: 13px;
 
-    #passwordInput {
-      width: 250px;
-      padding: 12px 15px;
-
-      font-size: 16px;
+      background: #17172a;
+      color: white;
 
       border: 2px solid #00d4ff;
       border-radius: 6px;
 
-      background: #1a1a2e;
-      color: white;
-
       outline: none;
+      font-size: 16px;
 
       box-shadow: 0 0 10px #00d4ff;
     }
 
-    #passwordInput:focus {
-      box-shadow:
-        0 0 10px #00d4ff,
-        0 0 20px #00d4ff;
-    }
+    #loginButton {
+      margin-top: 12px;
 
-    .login-button {
-      padding: 11px 25px;
-
-      font-size: 16px;
-      font-weight: bold;
-
-      color: white;
-      background: #00d4ff;
+      padding: 12px 28px;
 
       border: none;
       border-radius: 6px;
 
+      background: #00d4ff;
+      color: white;
+
+      font-weight: bold;
+      font-size: 16px;
+
       cursor: pointer;
 
-      box-shadow: 0 0 10px #00d4ff;
-
-      transition: 0.2s;
+      box-shadow: 0 0 12px #00d4ff;
     }
 
-    .login-button:hover {
+    #loginButton:hover {
       background: #0099cc;
-
-      box-shadow:
-        0 0 10px #0099cc,
-        0 0 20px #0099cc;
     }
 
     #message {
-      margin-top: 5px;
-      font-size: 18px;
+      margin-top: 15px;
       font-weight: bold;
     }
 
@@ -123,153 +101,173 @@
 
     #browser {
       display: none;
+      height: 100vh;
       width: 100%;
-      min-height: 100vh;
-      background: #10101c;
+      background: #101018;
     }
 
 
     /* TOP BAR */
 
-    .browser-top {
-      height: 65px;
+    .topbar {
+      height: 58px;
 
       display: flex;
       align-items: center;
 
-      gap: 8px;
+      gap: 7px;
 
-      padding: 10px 15px;
+      padding: 8px 12px;
 
-      background: #151522;
+      background: #181824;
 
-      border-bottom: 1px solid #29293d;
-
-      box-shadow: 0 2px 15px rgba(0, 212, 255, 0.15);
+      border-bottom: 1px solid #303044;
     }
 
 
-    /* NAVIGATION BUTTONS */
+    /* BUTTONS */
 
-    .nav-button {
+    .nav {
       width: 38px;
       height: 38px;
 
       border: none;
-      border-radius: 6px;
+      border-radius: 7px;
 
-      background: #202033;
+      background: #242438;
+      color: #ddd;
 
-      color: #aaa;
-
-      font-size: 18px;
+      font-size: 20px;
 
       cursor: pointer;
-
-      transition: 0.2s;
     }
 
-    .nav-button:hover {
-      background: #292943;
+    .nav:hover {
+      background: #30304a;
       color: white;
     }
 
 
     /* ADDRESS BAR */
 
-    .address-bar {
+    #url {
       flex: 1;
 
-      height: 40px;
-
-      display: flex;
-      align-items: center;
+      height: 38px;
 
       padding: 0 15px;
 
-      background: #0d0d18;
-
-      border: 1px solid #30304a;
-
+      border: 1px solid #36364e;
       border-radius: 20px;
 
-      color: #888;
+      background: #0e0e19;
+      color: white;
+
+      outline: none;
 
       font-size: 14px;
-
-      overflow: hidden;
     }
 
-    .address-icon {
-      margin-right: 9px;
-      color: #00d4ff;
+    #url:focus {
+      border-color: #00d4ff;
+
+      box-shadow:
+        0 0 8px rgba(0, 212, 255, 0.4);
     }
 
-    #addressText {
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+    #go {
+      height: 38px;
+
+      padding: 0 18px;
+
+      border: none;
+      border-radius: 7px;
+
+      background: #00d4ff;
+      color: white;
+
+      font-weight: bold;
+
+      cursor: pointer;
+    }
+
+    #go:hover {
+      background: #0099cc;
     }
 
 
-    /* =========================
-       TAB
-    ========================= */
+    /* TAB BAR */
 
-    .tab-bar {
-      height: 40px;
+    .tabs {
+      height: 38px;
 
       display: flex;
       align-items: flex-end;
 
-      padding-left: 15px;
+      background: #0c0c14;
 
-      background: #0c0c15;
+      padding-left: 10px;
     }
 
     .tab {
-      height: 34px;
+      height: 32px;
 
-      min-width: 180px;
+      min-width: 190px;
 
       padding: 8px 15px;
 
-      background: #151522;
+      background: #181824;
 
-      border-radius: 8px 8px 0 0;
+      border-radius: 7px 7px 0 0;
 
       color: #ddd;
 
       font-size: 13px;
     }
 
-    .tab::before {
-      content: "🌐";
-      margin-right: 8px;
+
+    /* CONTENT */
+
+    #content {
+      width: 100%;
+      height: calc(100vh - 96px);
+
+      background: white;
+    }
+
+    #webview {
+      width: 100%;
+      height: 100%;
+
+      border: none;
+
+      background: white;
     }
 
 
-    /* =========================
-       PAGE
-    ========================= */
+    /* HOME */
 
-    .browser-page {
-      min-height: calc(100vh - 105px);
+    #home {
+      height: 100%;
 
-      padding: 50px 20px;
+      display: flex;
+
+      flex-direction: column;
+
+      justify-content: center;
+
+      align-items: center;
 
       background:
         radial-gradient(
-          circle at top,
-          rgba(0, 212, 255, 0.08),
-          transparent 40%
+          circle at center,
+          #14142a,
+          #080810
         );
     }
 
-    .browser-title {
-      text-align: center;
-
-      font-size: 34px;
+    #home h1 {
+      font-size: 42px;
 
       margin-bottom: 10px;
 
@@ -277,178 +275,37 @@
         0 0 10px #00d4ff;
     }
 
-    .browser-subtitle {
-      text-align: center;
-
+    #home p {
       color: #888;
-
-      margin-bottom: 35px;
-    }
-
-
-    /* GOOGLE SEARCH CONTAINER */
-
-    .search-container {
-      width: 95%;
-      max-width: 1000px;
-
-      margin: auto;
-
-      padding: 25px;
-
-      background: rgba(20, 20, 35, 0.9);
-
-      border: 1px solid #292943;
-
-      border-radius: 12px;
-
-      box-shadow:
-        0 0 25px rgba(0, 212, 255, 0.1);
-    }
-
-
-    /* GOOGLE OVERRIDES */
-
-    .gsc-control-cse {
-      background: transparent !important;
-      border: none !important;
-
-      padding: 0 !important;
-    }
-
-    .gsc-search-box {
-      margin-bottom: 15px !important;
-    }
-
-    .gsc-input-box {
-      background: #11111f !important;
-
-      border: 1px solid #33334d !important;
-
-      border-radius: 6px !important;
-    }
-
-    input.gsc-input {
-      color: white !important;
-    }
-
-    .gsc-search-button-v2 {
-      background: #00d4ff !important;
-
-      border: none !important;
-
-      border-radius: 6px !important;
-
-      padding: 10px 20px !important;
-    }
-
-    .gsc-search-button-v2:hover {
-      background: #0099cc !important;
-    }
-
-    .gsc-result {
-      background: transparent !important;
-      border-bottom: 1px solid #292943 !important;
-    }
-
-    .gs-title {
-      color: #00d4ff !important;
-    }
-
-    .gs-visibleUrl {
-      color: #00ffcc !important;
-    }
-
-    .gs-webResult .gs-snippet {
-      color: #ccc !important;
-    }
-
-
-    /* FOOTER */
-
-    .browser-footer {
-      text-align: center;
-
-      color: #555;
-
-      font-size: 12px;
-
-      margin-top: 30px;
-    }
-
-
-    /* MOBILE */
-
-    @media (max-width: 600px) {
-
-      #login-screen h1 {
-        font-size: 2rem;
-      }
-
-      .browser-top {
-        padding: 8px;
-      }
-
-      .nav-button {
-        width: 32px;
-        height: 32px;
-      }
-
-      .address-bar {
-        height: 34px;
-        font-size: 12px;
-      }
-
-      .tab {
-        min-width: 150px;
-      }
-
-      .browser-page {
-        padding: 30px 10px;
-      }
-
-      .search-container {
-        width: 100%;
-        padding: 10px;
-      }
     }
 
   </style>
 </head>
 
-
 <body>
 
 
   <!-- =========================
-       LOGIN
+       LOGIN SCREEN
   ========================= -->
 
-  <div id="login-screen">
+  <div id="login">
 
     <h1>Welcome To Aiden's Safe Place</h1>
 
     <h2>Type In Password</h2>
 
-    <div class="login-container">
+    <input
+      id="password"
+      type="password"
+      placeholder="Enter password"
+    >
 
-      <input
-        type="password"
-        id="passwordInput"
-        placeholder="Enter password"
-        autocomplete="off"
-      >
+    <button id="loginButton">
+      Submit
+    </button>
 
-      <button
-        class="login-button"
-        onclick="checkPassword()"
-      >
-        Submit
-      </button>
-
-      <div id="message"></div>
-
-    </div>
+    <div id="message"></div>
 
   </div>
 
@@ -461,134 +318,98 @@
   <div id="browser">
 
 
-    <!-- TOP NAVIGATION -->
+    <div class="topbar">
 
-    <div class="browser-top">
-
-      <button
-        class="nav-button"
-        onclick="goBack()"
-        title="Back"
-      >
+      <button class="nav" onclick="back()">
         ←
       </button>
 
-      <button
-        class="nav-button"
-        onclick="goForward()"
-        title="Forward"
-      >
+      <button class="nav" onclick="forward()">
         →
       </button>
 
-      <button
-        class="nav-button"
-        onclick="reloadPage()"
-        title="Reload"
-      >
+      <button class="nav" onclick="reload()">
         ⟳
       </button>
 
 
-      <div class="address-bar">
+      <input
+        id="url"
+        type="text"
+        placeholder="Enter a website or search..."
+      >
 
-        <span class="address-icon">
-          🔒
-        </span>
-
-        <span id="addressText">
-          Search the Web
-        </span>
-
-      </div>
+      <button id="go" onclick="navigate()">
+        Go
+      </button>
 
     </div>
 
 
-
-    <!-- TAB -->
-
-    <div class="tab-bar">
+    <div class="tabs">
 
       <div class="tab">
-        Aiden's Safe Place
+        🌐 Aiden's Browser
       </div>
 
     </div>
 
 
+    <div id="content">
 
-    <!-- PAGE -->
+      <div id="home">
 
-    <main class="browser-page">
+        <h1>Aiden's Browser</h1>
 
-      <div class="browser-title">
-        Search The Web
-      </div>
-
-      <div class="browser-subtitle">
-        Search from inside Aiden's Safe Place
-      </div>
-
-
-      <div class="search-container">
-
-        <div class="gcse-search"></div>
+        <p>
+          Enter a website above to get started.
+        </p>
 
       </div>
 
+      <iframe
+        id="webview"
+        style="display:none;"
+        title="Web Browser"
+      ></iframe>
 
-      <div class="browser-footer">
-        Aiden's Safe Place • Web Search
-      </div>
-
-    </main>
+    </div>
 
   </div>
 
 
 
-  <!-- =========================
-       JAVASCRIPT
-  ========================= -->
-
   <script>
 
-    function checkPassword() {
+    const passwordInput =
+      document.getElementById("password");
 
-      const input =
-        document.getElementById("passwordInput").value;
+    const message =
+      document.getElementById("message");
 
-      const message =
-        document.getElementById("message");
 
-      if (input === "1234") {
+    /* LOGIN */
+
+    function login() {
+
+      if (passwordInput.value === "1234") {
 
         message.style.color = "#00ffcc";
+        message.textContent = "Access Granted!";
 
-        message.style.textShadow =
-          "0 0 10px #00ffcc";
+        setTimeout(() => {
 
-        message.textContent =
-          "Access Granted!";
-
-        setTimeout(function() {
-
-          document.getElementById("login-screen").style.display =
+          document.getElementById("login").style.display =
             "none";
 
           document.getElementById("browser").style.display =
             "block";
 
-        }, 500);
+        }, 400);
 
       } else {
 
         message.style.color = "#ff0055";
-
-        message.style.textShadow =
-          "0 0 10px #ff0055";
-
         message.textContent =
           "Incorrect Password. Try again.";
 
@@ -597,40 +418,121 @@
     }
 
 
-    /* Enter key */
+    document
+      .getElementById("loginButton")
+      .addEventListener("click", login);
+
+
+    passwordInput.addEventListener("keydown", event => {
+
+      if (event.key === "Enter") {
+        login();
+      }
+
+    });
+
+
+    /* =========================
+       BROWSER FUNCTIONS
+    ========================= */
+
+    function navigate() {
+
+      let address =
+        document.getElementById("url").value.trim();
+
+      if (!address) return;
+
+
+      /*
+        If the user doesn't type a protocol,
+        assume HTTPS.
+      */
+
+      if (
+        !address.startsWith("http://") &&
+        !address.startsWith("https://")
+      ) {
+
+        /*
+          Treat normal text as a Google search.
+        */
+
+        if (
+          !address.includes(".") ||
+          address.includes(" ")
+        ) {
+
+          address =
+            "https://www.google.com/search?q=" +
+            encodeURIComponent(address);
+
+        } else {
+
+          address = "https://" + address;
+
+        }
+
+      }
+
+
+      const iframe =
+        document.getElementById("webview");
+
+      const home =
+        document.getElementById("home");
+
+
+      home.style.display = "none";
+
+      iframe.style.display = "block";
+
+      iframe.src = address;
+
+      document.getElementById("url").value = address;
+
+    }
+
+
+    /* ENTER IN ADDRESS BAR */
 
     document
-      .getElementById("passwordInput")
-      .addEventListener("keydown", function(event) {
+      .getElementById("url")
+      .addEventListener("keydown", event => {
 
         if (event.key === "Enter") {
-
-          checkPassword();
-
+          navigate();
         }
 
       });
 
 
-    /* Browser-style buttons */
-
-    function goBack() {
-
-      window.history.back();
-
+    function back() {
+      try {
+        document.getElementById("webview")
+          .contentWindow.history.back();
+      } catch (e) {
+        window.history.back();
+      }
     }
 
 
-    function goForward() {
-
-      window.history.forward();
-
+    function forward() {
+      try {
+        document.getElementById("webview")
+          .contentWindow.history.forward();
+      } catch (e) {
+        window.history.forward();
+      }
     }
 
 
-    function reloadPage() {
+    function reload() {
 
-      location.reload();
+      const iframe =
+        document.getElementById("webview");
+
+      iframe.src = iframe.src;
 
     }
 
