@@ -104,6 +104,10 @@
       height: 100vh;
       width: 100%;
       background: #101018;
+
+      /* Stack the bars on top, and let the
+         content area fill whatever is left. */
+      flex-direction: column;
     }
 
 
@@ -145,6 +149,17 @@
     .nav:hover {
       background: #30304a;
       color: white;
+    }
+
+    /* Greyed out when there's nowhere to go */
+    .nav:disabled {
+      opacity: 0.35;
+      cursor: default;
+    }
+
+    .nav:disabled:hover {
+      background: #242438;
+      color: #ddd;
     }
 
 
@@ -213,6 +228,7 @@
       height: 32px;
 
       min-width: 190px;
+      max-width: 260px;
 
       padding: 8px 15px;
 
@@ -223,6 +239,56 @@
       color: #ddd;
 
       font-size: 13px;
+
+      /* Long site names get "..." instead of overflowing */
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+
+    /* NOTICE BAR (for sites that block iframes) */
+
+    #notice {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      gap: 10px;
+
+      padding: 6px 14px;
+
+      background: #1c1c2e;
+      color: #aaa;
+
+      font-size: 13px;
+
+      border-bottom: 1px solid #303044;
+    }
+
+    /* Without this, "display: flex" above would
+       beat the hidden attribute and never hide it */
+    #notice[hidden] {
+      display: none;
+    }
+
+    #openNewTab {
+      padding: 5px 12px;
+
+      border: 1px solid #00d4ff;
+      border-radius: 6px;
+
+      background: transparent;
+      color: #00d4ff;
+
+      font-size: 13px;
+
+      cursor: pointer;
+    }
+
+    #openNewTab:hover {
+      background: #00d4ff;
+      color: #0d0d1a;
     }
 
 
@@ -230,7 +296,10 @@
 
     #content {
       width: 100%;
-      height: calc(100vh - 96px);
+
+      /* Fill all the space left under the bars */
+      flex: 1;
+      min-height: 0;
 
       background: white;
     }
@@ -320,16 +389,20 @@
 
     <div class="topbar">
 
-      <button class="nav" onclick="back()">
+      <button id="backButton" class="nav" onclick="back()" title="Back" disabled>
         ←
       </button>
 
-      <button class="nav" onclick="forward()">
+      <button id="forwardButton" class="nav" onclick="forward()" title="Forward" disabled>
         →
       </button>
 
-      <button class="nav" onclick="reload()">
+      <button class="nav" onclick="reload()" title="Reload">
         ⟳
+      </button>
+
+      <button class="nav" onclick="goHome()" title="Home">
+        ⌂
       </button>
 
 
@@ -348,9 +421,23 @@
 
     <div class="tabs">
 
-      <div class="tab">
+      <div class="tab" id="tabTitle">
         🌐 Aiden's Browser
       </div>
+
+    </div>
+
+
+    <!-- Shown only while a website is open -->
+    <div id="notice" hidden>
+
+      <span>
+        Page blank? Some sites block being shown inside other pages.
+      </span>
+
+      <button id="openNewTab" onclick="openInNewTab()">
+        Open in new tab ↗
+      </button>
 
     </div>
 
@@ -403,7 +490,7 @@
             "none";
 
           document.getElementById("browser").style.display =
-            "block";
+            "flex";
 
         }, 400);
 
@@ -435,6 +522,22 @@
     /* =========================
        BROWSER FUNCTIONS
     ========================= */
+
+    /*
+      Our own history list.
+
+      We can't read the iframe's real history
+      (the browser blocks that for other websites),
+      so we remember every page ourselves.
+
+      historyList  = every address we've visited
+      historyIndex = which one we're on right now
+                     (-1 means the home screen)
+    */
+
+    let historyList = [];
+    let historyIndex = -1;
+
 
     function navigate() {
 
@@ -476,20 +579,87 @@
       }
 
 
+      /*
+        If we went back and then visit a new page,
+        the old "forward" pages get thrown away
+        (that's how real browsers work too).
+      */
+
+      historyList = historyList.slice(0, historyIndex + 1);
+
+      historyList.push(address);
+
+      historyIndex = historyList.length - 1;
+
+      showPage(address);
+
+    }
+
+
+    /* Show a website (doesn't touch history) */
+
+    function showPage(address) {
+
       const iframe =
         document.getElementById("webview");
 
-      const home =
-        document.getElementById("home");
 
+      document.getElementById("home").style.display = "none";
 
-      home.style.display = "none";
+      document.getElementById("notice").hidden = false;
 
       iframe.style.display = "block";
 
       iframe.src = address;
 
       document.getElementById("url").value = address;
+
+      /* Put the site's name on the tab, like "wikipedia.org" */
+      document.getElementById("tabTitle").textContent =
+        "🌐 " + new URL(address).hostname.replace("www.", "");
+
+      updateButtons();
+
+    }
+
+
+    /* Go back to the home screen */
+
+    function goHome() {
+
+      const iframe =
+        document.getElementById("webview");
+
+
+      iframe.style.display = "none";
+
+      iframe.src = "about:blank";
+
+      document.getElementById("home").style.display = "flex";
+
+      document.getElementById("notice").hidden = true;
+
+      document.getElementById("url").value = "";
+
+      document.getElementById("tabTitle").textContent =
+        "🌐 Aiden's Browser";
+
+      historyIndex = -1;
+
+      updateButtons();
+
+    }
+
+
+    /* Grey out back/forward when you can't use them */
+
+    function updateButtons() {
+
+      document.getElementById("backButton").disabled =
+        historyIndex < 0;
+
+      document.getElementById("forwardButton").disabled =
+        historyIndex >= historyList.length - 1;
 
     }
 
@@ -508,31 +678,56 @@
 
 
     function back() {
-      try {
-        document.getElementById("webview")
-          .contentWindow.history.back();
-      } catch (e) {
-        window.history.back();
+
+      if (historyIndex > 0) {
+
+        historyIndex--;
+
+        showPage(historyList[historyIndex]);
+
+      } else if (historyIndex === 0) {
+
+        /* Going back from the first page = home screen */
+        goHome();
+
       }
+
     }
 
 
     function forward() {
-      try {
-        document.getElementById("webview")
-          .contentWindow.history.forward();
-      } catch (e) {
-        window.history.forward();
+
+      if (historyIndex < historyList.length - 1) {
+
+        historyIndex++;
+
+        showPage(historyList[historyIndex]);
+
       }
+
     }
 
 
     function reload() {
 
-      const iframe =
-        document.getElementById("webview");
+      if (historyIndex >= 0) {
+        showPage(historyList[historyIndex]);
+      }
 
-      iframe.src = iframe.src;
+    }
+
+
+    /* For sites that refuse to load in the iframe */
+
+    function openInNewTab() {
+
+      if (historyIndex >= 0) {
+
+        /* "noopener" stops the new page from being
+           able to control this page (a safety habit) */
+        window.open(historyList[historyIndex], "_blank", "noopener");
+
+      }
 
     }
 
