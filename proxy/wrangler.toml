@@ -1,0 +1,9 @@
+name = "aiden-browser-proxy"
+main = "src/index.js"
+compatibility_date = "2026-09-01"
+
+# Accounts: "user:<name>" -> { role, salt, hash }
+# Add/remove them with "npm run user" (see scripts/user.mjs)
+[[kv_namespaces]]
+binding = "USERS"
+id = "b43af091915348b4bcf4734e68e843af"

@@ -50,9 +50,11 @@
       margin-bottom: 25px;
     }
 
+    #username,
     #password {
       width: 260px;
       padding: 13px;
+      margin-bottom: 12px;
 
       background: #17172a;
       color: white;
@@ -67,7 +69,6 @@
     }
 
     #loginButton {
-      margin-top: 12px;
 
       padding: 12px 28px;
 
@@ -91,7 +92,11 @@
 
     #message {
       margin-top: 15px;
+      max-width: 90%;
       font-weight: bold;
+
+      /* Lets "Reason: ..." and the contact line sit on separate lines */
+      white-space: pre-line;
     }
 
 
@@ -208,6 +213,223 @@
 
     #go:hover {
       background: #0099cc;
+    }
+
+
+    /* ACCOUNT (who's logged in) */
+
+    .account {
+      display: flex;
+      align-items: center;
+
+      gap: 6px;
+
+      padding-left: 6px;
+
+      color: #ddd;
+      font-size: 13px;
+
+      white-space: nowrap;
+    }
+
+    /* Only shown for the master account; click it to open the admin panel */
+    #adminBadge {
+      padding: 2px 7px;
+
+      border: none;
+      border-radius: 10px;
+
+      background: #00d4ff;
+      color: #0d0d1a;
+
+      font-size: 11px;
+      font-weight: bold;
+
+      cursor: pointer;
+    }
+
+    #adminBadge:hover {
+      background: #0099cc;
+    }
+
+    #adminBadge[hidden] {
+      display: none;
+    }
+
+
+    /* =========================
+       ADMIN PANEL
+    ========================= */
+
+    #adminPanel {
+      height: 100vh;
+
+      overflow-y: auto;
+
+      padding: 24px 16px;
+
+      background:
+        radial-gradient(
+          circle at top,
+          #14142a,
+          #080810
+        );
+    }
+
+    #adminPanel[hidden] {
+      display: none;
+    }
+
+    .panelHeader {
+      max-width: 760px;
+      margin: 0 auto 10px;
+
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+
+      gap: 10px;
+    }
+
+    .panelHeader h1 {
+      margin: 0;
+
+      text-shadow:
+        0 0 10px #00d4ff;
+    }
+
+    .panelHeader div {
+      display: flex;
+      gap: 8px;
+    }
+
+    #panelMessage {
+      max-width: 760px;
+      min-height: 20px;
+      margin: 0 auto 10px;
+
+      font-weight: bold;
+    }
+
+    #userList {
+      max-width: 760px;
+      margin: 0 auto;
+
+      display: flex;
+      flex-direction: column;
+
+      gap: 12px;
+    }
+
+    .userRow {
+      padding: 14px;
+
+      border: 1px solid #303044;
+      border-radius: 8px;
+
+      background: #181824;
+
+      display: flex;
+      flex-direction: column;
+
+      gap: 10px;
+    }
+
+    .userRow.off {
+      border-color: #ff0055;
+    }
+
+    .userInfo {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+
+      gap: 8px;
+    }
+
+    .userInfo b {
+      font-size: 17px;
+    }
+
+    .status {
+      font-size: 13px;
+      color: #00ffcc;
+    }
+
+    .userRow.off .status {
+      color: #ff0055;
+    }
+
+    .userActions {
+      display: flex;
+      flex-wrap: wrap;
+
+      gap: 8px;
+    }
+
+    .panelInput {
+      flex: 1;
+      min-width: 160px;
+
+      height: 36px;
+
+      padding: 0 12px;
+
+      border: 1px solid #36364e;
+      border-radius: 6px;
+
+      background: #0e0e19;
+      color: white;
+
+      outline: none;
+    }
+
+    .panelInput:focus {
+      border-color: #00d4ff;
+    }
+
+    /* The reason box sits in a column, where "flex: 1" would squash its height */
+    .userRow > .panelInput {
+      flex: none;
+    }
+
+    .panelButton {
+      height: 36px;
+
+      padding: 0 14px;
+
+      border: none;
+      border-radius: 6px;
+
+      background: #00d4ff;
+      color: #0d0d1a;
+
+      font-weight: bold;
+
+      cursor: pointer;
+    }
+
+    .panelButton:hover {
+      background: #0099cc;
+    }
+
+    .panelButton.danger {
+      background: #ff0055;
+      color: white;
+    }
+
+    .panelButton.danger:hover {
+      background: #cc0044;
+    }
+
+    .panelButton.plain {
+      background: #242438;
+      color: #ddd;
+    }
+
+    .panelButton.plain:hover {
+      background: #30304a;
     }
 
 
@@ -348,6 +570,61 @@
       color: #888;
     }
 
+
+    /* PHONES: shrink things so the top bar fits */
+
+    @media (max-width: 600px) {
+
+      #login h1 {
+        font-size: 2rem;
+        padding: 0 16px;
+      }
+
+      #username,
+      #password {
+        width: 80%;
+      }
+
+      /* Just the 👤 and badge, no name, to save space */
+      #accountName {
+        display: none;
+      }
+
+      .topbar {
+        gap: 4px;
+        padding: 8px 6px;
+      }
+
+      .nav {
+        width: 32px;
+        height: 32px;
+        font-size: 16px;
+        flex-shrink: 0;
+      }
+
+      #url {
+        min-width: 0;
+        padding: 0 10px;
+      }
+
+      #go {
+        padding: 0 12px;
+      }
+
+      .tab {
+        min-width: 0;
+      }
+
+      #notice span {
+        font-size: 12px;
+      }
+
+      #home h1 {
+        font-size: 30px;
+      }
+
+    }
+
   </style>
 </head>
 
@@ -362,12 +639,22 @@
 
     <h1>Welcome To Aiden's Safe Place</h1>
 
-    <h2>Type In Password</h2>
+    <h2>Log In</h2>
+
+    <input
+      id="username"
+      type="text"
+      placeholder="Username"
+      autocomplete="username"
+      autocapitalize="none"
+      spellcheck="false"
+    >
 
     <input
       id="password"
       type="password"
-      placeholder="Enter password"
+      placeholder="Password"
+      autocomplete="current-password"
     >
 
     <button id="loginButton">
@@ -416,6 +703,19 @@
         Go
       </button>
 
+
+      <div class="account">
+
+        👤 <span id="accountName"></span>
+
+        <button id="adminBadge" onclick="showPanel()" title="Open the admin panel" hidden>ADMIN</button>
+
+        <button class="nav" onclick="showLogin()" title="Log out">
+          ⏻
+        </button>
+
+      </div>
+
     </div>
 
 
@@ -432,7 +732,7 @@
     <div id="notice" hidden>
 
       <span>
-        Page blank? Some sites block being shown inside other pages.
+        Page broken? Big sites (YouTube, logins) don't always work through the proxy.
       </span>
 
       <button id="openNewTab" onclick="openInNewTab()">
@@ -454,10 +754,16 @@
 
       </div>
 
+      <!--
+        sandbox: the page can run its scripts and forms,
+        but it can't take over the whole browser tab
+        (no "allow-top-navigation").
+      -->
       <iframe
         id="webview"
         style="display:none;"
         title="Web Browser"
+        sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"
       ></iframe>
 
     </div>
@@ -466,7 +772,63 @@
 
 
 
+  <!-- =========================
+       ADMIN PANEL (admin accounts only)
+  ========================= -->
+
+  <div id="adminPanel" hidden>
+
+    <div class="panelHeader">
+
+      <h1>Admin Panel</h1>
+
+      <div>
+
+        <button class="panelButton" onclick="showBrowser()">
+          Open Browser
+        </button>
+
+        <button class="panelButton plain" onclick="showLogin()">
+          Log out
+        </button>
+
+      </div>
+
+    </div>
+
+    <p id="panelMessage"></p>
+
+    <!-- One card per account, filled in by loadUsers() -->
+    <div id="userList"></div>
+
+  </div>
+
+
+
   <script>
+
+    /*
+      Where the proxy (the Cloudflare Worker in /proxy) lives.
+      Opening this file on your own computer uses the test
+      proxy from "npm run dev"; the real site uses the online one.
+    */
+
+    const PROXY =
+      location.hostname === "localhost" ||
+      location.hostname === "127.0.0.1" ||
+      location.protocol === "file:"
+        ? "http://127.0.0.1:8787"
+        : "https://aiden-browser-proxy.aiden-browser-proxy-2.workers.dev";
+
+
+    /* What every error (wrong password, proxy down, login ran out) says */
+
+    const CONTACT =
+      "Contact caterjake05@gmail.com";
+
+
+    const usernameInput =
+      document.getElementById("username");
 
     const passwordInput =
       document.getElementById("password");
@@ -475,39 +837,388 @@
       document.getElementById("message");
 
 
-    /* LOGIN */
+    /*
+      The proxy gives us a token when the username and password
+      are right. We send it with every page so strangers can't use
+      the proxy. sessionStorage forgets it when the tab closes.
 
-    function login() {
+      account = { token, username, role }   (role is "user" or "admin")
+    */
 
-      if (passwordInput.value === "1234") {
+    let account = null;
+
+    try {
+      account = JSON.parse(sessionStorage.getItem("account"));
+    } catch {
+      // Nothing saved, or storage blocked (private window)
+    }
+
+    let token = account ? account.token : "";
+
+
+    /* The token looks like "aiden.1790000000000.abc...": the middle part is the expiry time */
+
+    function tokenIsFresh() {
+
+      return Number(token.split(".")[1]) > Date.now();
+
+    }
+
+
+    function showBrowser() {
+
+      document.getElementById("accountName").textContent =
+        account.username;
+
+      document.getElementById("adminBadge").hidden =
+        account.role !== "admin";
+
+      document.getElementById("login").style.display =
+        "none";
+
+      document.getElementById("adminPanel").hidden =
+        true;
+
+      document.getElementById("browser").style.display =
+        "flex";
+
+    }
+
+
+    /* Admins land on the admin panel, everyone else on the browser */
+
+    function showStart() {
+
+      if (account.role === "admin") {
+        showPanel();
+      } else {
+        showBrowser();
+      }
+
+    }
+
+
+    /* errorText: what to show under the login box (empty for a normal log out) */
+
+    function showLogin(errorText = "") {
+
+      account = null;
+
+      token = "";
+
+      try {
+        sessionStorage.removeItem("account");
+      } catch {}
+
+      goHome();
+
+      passwordInput.value = "";
+
+      message.style.color = "#ff0055";
+      message.textContent = errorText;
+
+      document.getElementById("browser").style.display =
+        "none";
+
+      document.getElementById("adminPanel").hidden =
+        true;
+
+      document.getElementById("login").style.display =
+        "flex";
+
+    }
+
+
+    /* LOGIN (the username and password are checked by the proxy, not here) */
+
+    async function login() {
+
+      message.style.color = "#ddd";
+      message.textContent = "Checking...";
+
+      let response;
+
+      try {
+
+        response = await fetch(PROXY + "/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            username: usernameInput.value,
+            password: passwordInput.value
+          })
+        });
+
+      } catch {
+
+        message.style.color = "#ff0055";
+        message.textContent =
+          CONTACT;
+
+        return;
+
+      }
+
+
+      if (response.ok) {
+
+        account = await response.json();
+
+        token = account.token;
+
+        passwordInput.value = "";
+
+        try {
+          sessionStorage.setItem("account", JSON.stringify(account));
+        } catch {}
 
         message.style.color = "#00ffcc";
         message.textContent = "Access Granted!";
 
-        setTimeout(() => {
-
-          document.getElementById("login").style.display =
-            "none";
-
-          document.getElementById("browser").style.display =
-            "flex";
-
-        }, 400);
+        setTimeout(showStart, 400);
 
       } else {
 
+        /*
+          If an admin disabled this login or changed the password,
+          the proxy sends back the reason they typed.
+        */
+
+        const data = await response.json().catch(() => ({}));
+
         message.style.color = "#ff0055";
         message.textContent =
-          "Incorrect Password. Try again.";
+          data.reason
+            ? "Reason: " + data.reason + "\n" + CONTACT
+            : CONTACT;
 
       }
 
     }
 
 
+
+    /* =========================
+       ADMIN PANEL
+    ========================= */
+
+    const panelMessage =
+      document.getElementById("panelMessage");
+
+
+    function showPanel() {
+
+      document.getElementById("login").style.display =
+        "none";
+
+      document.getElementById("browser").style.display =
+        "none";
+
+      document.getElementById("adminPanel").hidden =
+        false;
+
+      loadUsers();
+
+    }
+
+
+    function say(text, isError = false) {
+
+      panelMessage.style.color = isError ? "#ff0055" : "#00ffcc";
+      panelMessage.textContent = text;
+
+    }
+
+
+    /*
+      Calls an /admin route on the proxy with our token.
+      Leave out body to read (GET), pass one to change something (POST).
+    */
+
+    async function adminRequest(path, body) {
+
+      let response;
+
+      try {
+
+        response = await fetch(PROXY + "/admin/" + path, {
+          method: body ? "POST" : "GET",
+          headers: {
+            "Authorization": "Bearer " + token,
+            "Content-Type": "application/json"
+          },
+          body: body ? JSON.stringify(body) : undefined
+        });
+
+      } catch {
+
+        say(CONTACT, true);
+        return null;
+
+      }
+
+
+      const data = await response.json().catch(() => ({}));
+
+      /* Our login ran out or isn't an admin anymore */
+      if (response.status === 403) {
+        showLogin(CONTACT);
+        return null;
+      }
+
+      if (!response.ok) {
+        say(data.error || CONTACT, true);
+        return null;
+      }
+
+      return data;
+
+    }
+
+
+    async function loadUsers() {
+
+      const data = await adminRequest("users");
+
+      if (!data) return;
+
+      const list = document.getElementById("userList");
+
+      list.replaceChildren(...data.users.map(userCard));
+
+    }
+
+
+    /* Builds one account's card. textContent keeps names and reasons from running as HTML. */
+
+    function userCard(user) {
+
+      const card = document.createElement("div");
+      card.className = "userRow" + (user.disabled ? " off" : "");
+
+
+      const info = document.createElement("div");
+      info.className = "userInfo";
+
+      const name = document.createElement("b");
+      name.textContent = user.username;
+
+      const status = document.createElement("span");
+      status.className = "status";
+      status.textContent = user.disabled
+        ? "Disabled" + (user.reason ? ": " + user.reason : "")
+        : "Active";
+
+      info.append(name);
+
+      if (user.role === "admin") {
+        const badge = document.createElement("span");
+        badge.className = "panelButton";
+        badge.style.cssText = "height:auto;padding:2px 7px;font-size:11px;cursor:default";
+        badge.textContent = "ADMIN";
+        info.append(badge);
+      }
+
+      info.append(status);
+
+
+      const reason = document.createElement("input");
+      reason.className = "panelInput";
+      reason.placeholder = "Reason (they see this when they try to log in)";
+      reason.maxLength = 200;
+
+
+      const actions = document.createElement("div");
+      actions.className = "userActions";
+
+      const newPassword = document.createElement("input");
+      newPassword.className = "panelInput";
+      newPassword.placeholder = "New password";
+      newPassword.autocomplete = "off";
+
+      const changeButton = document.createElement("button");
+      changeButton.className = "panelButton";
+      changeButton.textContent = "Change password";
+
+      changeButton.onclick = async () => {
+
+        if (!newPassword.value) {
+          say("Type a new password for " + user.username + " first.", true);
+          return;
+        }
+
+        const done = await adminRequest("password", {
+          username: user.username,
+          password: newPassword.value,
+          reason: reason.value
+        });
+
+        if (done) {
+          say("Changed " + user.username + "'s password.");
+          loadUsers();
+        }
+
+      };
+
+      actions.append(newPassword, changeButton);
+
+
+      /* You can't disable your own account (you'd be locked out) */
+
+      if (user.username !== account.username) {
+
+        const toggleButton = document.createElement("button");
+        toggleButton.className = "panelButton " + (user.disabled ? "plain" : "danger");
+        toggleButton.textContent = user.disabled ? "Enable login" : "Disable login";
+
+        toggleButton.onclick = async () => {
+
+          const done = await adminRequest("disable", {
+            username: user.username,
+            disabled: !user.disabled,
+            reason: reason.value
+          });
+
+          if (done) {
+            say((user.disabled ? "Enabled " : "Disabled ") + user.username + ".");
+            loadUsers();
+          }
+
+        };
+
+        actions.append(toggleButton);
+
+      }
+
+
+      card.append(info, reason, actions);
+
+      return card;
+
+    }
+
+
+    /* Still logged in from earlier? Skip the login screen. */
+
+    if (token && tokenIsFresh()) {
+      showStart();
+    }
+
+
     document
       .getElementById("loginButton")
       .addEventListener("click", login);
+
+
+    /* Enter in the username box moves to the password; in the password box it logs in */
+
+    usernameInput.addEventListener("keydown", event => {
+
+      if (event.key === "Enter") {
+        passwordInput.focus();
+      }
+
+    });
 
 
     passwordInput.addEventListener("keydown", event => {
@@ -538,6 +1249,9 @@
     let historyList = [];
     let historyIndex = -1;
 
+    /* True while a page we asked for is loading */
+    let waitingForPage = false;
+
 
     function navigate() {
 
@@ -558,7 +1272,9 @@
       ) {
 
         /*
-          Treat normal text as a Google search.
+          Treat normal text as a Bing search.
+          (Google blocks being shown in an iframe,
+          but Bing allows it.)
         */
 
         if (
@@ -567,7 +1283,7 @@
         ) {
 
           address =
-            "https://www.google.com/search?q=" +
+            "https://www.bing.com/search?q=" +
             encodeURIComponent(address);
 
         } else {
@@ -610,7 +1326,10 @@
 
       iframe.style.display = "block";
 
-      iframe.src = address;
+      /* Load it through the proxy so frame-blocking headers get removed */
+      iframe.src = PROXY + "/p/" + token + "/" + address;
+
+      waitingForPage = true;
 
       document.getElementById("url").value = address;
 
@@ -634,6 +1353,8 @@
       iframe.style.display = "none";
 
       iframe.src = "about:blank";
+
+      waitingForPage = false;
 
       document.getElementById("home").style.display = "flex";
 
@@ -717,7 +1438,69 @@
     }
 
 
-    /* For sites that refuse to load in the iframe */
+    /*
+      Messages from the proxy's helper script inside the page.
+
+      "aiden-page"   = a page finished loading (maybe because
+                       you clicked a link inside it)
+      "aiden-logout" = the login token ran out
+    */
+
+    window.addEventListener("message", event => {
+
+      const iframe =
+        document.getElementById("webview");
+
+      /* Only trust messages from our proxy, in our iframe */
+      if (
+        event.origin !== new URL(PROXY).origin ||
+        event.source !== iframe.contentWindow
+      ) return;
+
+
+      const data = event.data || {};
+
+      if (data.type === "aiden-logout") {
+        showLogin(CONTACT);
+        return;
+      }
+
+      if (data.type !== "aiden-page") return;
+
+
+      const address = data.url;
+
+      if (waitingForPage) {
+
+        /* A page we asked for. If it redirected
+           (wikipedia.org -> www.wikipedia.org), save the real address. */
+        historyList[historyIndex] = address;
+
+      } else if (address !== historyList[historyIndex]) {
+
+        /* You clicked a link inside the page: that's a new history entry */
+        historyList = historyList.slice(0, historyIndex + 1);
+
+        historyList.push(address);
+
+        historyIndex = historyList.length - 1;
+
+      }
+
+      waitingForPage = false;
+
+      document.getElementById("url").value = address;
+
+      /* Use the page's own title on the tab, or its site name */
+      document.getElementById("tabTitle").textContent =
+        "🌐 " + (data.title || new URL(address).hostname.replace("www.", ""));
+
+      updateButtons();
+
+    });
+
+
+    /* For sites that don't work well through the proxy */
 
     function openInNewTab() {
 
