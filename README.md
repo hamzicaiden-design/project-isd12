@@ -10,6 +10,7 @@ A one-page site for learning fractions. It's plain HTML, CSS, and JavaScript in 
 - **In the classroom** ideas and common mistakes to call out
 - **Practice:** random problems, pick which operations, checks your answer and keeps score
 - **Search:** type a topic like "common denominator" or "keep change flip"
+- **Fraction Pop:** an arcade game where you pop bubbles equal to a target fraction. Open it with Alt+G (or Alt+Space where the browser allows it), the Game icon, or by searching "game". It gets faster each level and adds adding, subtracting, multiplying, dividing, and "add the bottoms" trick bubbles. Best score is saved in the browser.
 
 ## Hosting
 
