@@ -124,6 +124,55 @@ ol,ul{padding-left:22px}
 @media (prefers-reduced-motion:reduce){.anim .new,.arrow path,.arrow polygon,.arrow text{animation:none;opacity:1;stroke-dashoffset:0}}
 @media (prefers-reduced-motion:reduce){.dock a{transition:none}}
 @media (max-width:480px){header{padding-top:12vh}.dock{gap:10px 22px}.ex{font-size:19px}.prob{font-size:24px}}
+/* Fraction Pop game: full-screen overlay, bubbles rise through .g-field */
+.game{position:fixed;inset:0;z-index:50;display:flex;flex-direction:column;background:rgba(8,8,9,.94);backdrop-filter:blur(10px);
+  padding:max(12px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) max(12px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px))}
+.game:focus{outline:none}
+.g-top{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 20px;padding-bottom:10px;border-bottom:1px solid var(--line)}
+.g-target{display:flex;align-items:center;gap:10px;font-size:14px;color:var(--muted)}
+.g-goal{font-family:var(--display);font-size:24px;color:var(--accent)}
+.g-goal .frac{font-size:28px}
+.g-stats{display:flex;align-items:center;gap:16px;font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.g-stats b{color:var(--fg);font-weight:500;font-size:17px;margin-left:6px}
+.g-combo{color:var(--good);font-weight:500}
+.g-combo:empty{display:none}
+.g-lives{color:var(--bad);font-size:18px;letter-spacing:3px}
+.g-lives i{font-style:normal}
+.g-lives i.lost{opacity:.2}
+.g-x{padding:6px 12px}
+.g-field{position:relative;flex:1;overflow:hidden;touch-action:manipulation}
+.g-field.hit{animation:ghit .45s ease}
+@keyframes ghit{from{box-shadow:inset 0 0 0 3px var(--bad)}to{box-shadow:inset 0 0 0 3px transparent}}
+.bub{position:absolute;left:0;top:0;z-index:1;display:flex;align-items:center;justify-content:center;gap:2px;min-width:84px;height:84px;padding:0 18px;
+  border-radius:999px;border:1px solid rgba(255,255,255,.28);background:radial-gradient(circle at 30% 25%,rgba(255,255,255,.2),rgba(255,255,255,.04) 62%);
+  color:var(--fg);font:400 22px var(--display);cursor:pointer;user-select:none;-webkit-user-select:none;-webkit-tap-highlight-color:transparent;will-change:transform}
+.bub:hover{border-color:var(--accent)}
+.bub:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.bub .op{color:var(--muted);font-size:18px;padding:0 3px}
+.bub.pop{pointer-events:none;border-color:var(--good);color:var(--good);animation:bpop .3s ease forwards}
+.bub.bad{pointer-events:none;border-color:var(--bad);color:var(--bad);animation:bbad .45s ease forwards}
+.bub.fade{pointer-events:none;animation:bfade .3s ease forwards}
+@keyframes bpop{to{opacity:0;scale:1.45}}
+@keyframes bbad{20%{translate:-6px 0}40%{translate:6px 0}60%{translate:0 0;opacity:1}100%{opacity:0}}
+@keyframes bfade{to{opacity:0}}
+.g-plus{position:absolute;z-index:2;translate:-50% 0;color:var(--good);font-weight:600;font-size:18px;pointer-events:none;animation:grise .8s ease forwards}
+@keyframes grise{to{opacity:0;transform:translateY(-44px)}}
+.g-toast{position:absolute;z-index:2;left:50%;bottom:18px;translate:-50% 0;width:max-content;max-width:calc(100% - 24px);text-align:center;background:#1a1a1c;
+  border:1px solid var(--line);border-radius:10px;padding:10px 16px;font-size:14px;opacity:0;transition:opacity .2s;pointer-events:none}
+.g-toast.on{opacity:1}
+.g-banner{position:absolute;z-index:2;inset:0;display:grid;place-content:center;justify-items:center;gap:8px;text-align:center;color:#d4d4d8;pointer-events:none;animation:gban 1.7s ease both}
+.g-lvl{font-family:var(--display);font-size:clamp(40px,8vw,64px);line-height:1;color:#fff}
+.g-banner .frac{font-size:28px;color:var(--accent)}
+.g-new{color:var(--good);font-size:14px}
+@keyframes gban{0%{opacity:0}12%,82%{opacity:1}100%{opacity:0}}
+.g-card{position:absolute;z-index:3;inset:0;display:grid;place-items:center;padding:16px;background:rgba(8,8,9,.55);overflow-y:auto}
+.g-box{max-width:440px;text-align:center;background:#141416;border:1px solid var(--line);border-radius:14px;padding:26px 24px}
+.g-box h2{font-family:var(--display);font-weight:400;font-size:36px;margin:0 0 10px}
+.g-box p{color:#d4d4d8;margin:0 0 10px;font-size:14px}
+.g-box b{color:#fff}
+.g-box .row{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:16px 0 4px}
+.g-box .keys{color:var(--muted);font-size:12px;margin:12px 0 0}
+@media (max-width:480px){.bub{min-width:70px;height:70px;padding:0 14px;font-size:19px}.g-stats{gap:12px}}
 </style>
 </head>
 <body>
@@ -143,10 +192,11 @@ ol,ul{padding-left:22px}
       <a href="#divide"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12h8"/><circle cx="12" cy="8.5" r=".6" fill="#fff"/><circle cx="12" cy="15.5" r=".6" fill="#fff"/></svg><span>Divide</span></a>
       <a href="#cancel"><svg viewBox="0 0 24 24"><path d="M5 4l14 16"/><path d="M9 4h-3v6h3M18 14h-3v6h3"/></svg><span>Cross Cancel</span></a>
       <a href="#practice"><svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h5M8 16l2 2 4-4"/></svg><span>Practice</span></a>
+      <a href="#game" data-game><svg viewBox="0 0 24 24"><circle cx="9" cy="15" r="6"/><circle cx="17.5" cy="6.5" r="3.5"/><path d="M6.5 13a3 3 0 0 1 2.5-2"/></svg><span>Game</span></a>
     </nav>
   </header>
 
-  <p class="home-hint" id="hint">Pick a lesson above or search for a topic like "common denominator" or "keep change flip".</p>
+  <p class="home-hint" id="hint">Pick a lesson above or search for a topic like "common denominator" or "keep change flip". Press Alt+G to play Fraction Pop.</p>
 
   <!-- ADD -->
   <section class="panel" id="add" hidden>
@@ -405,6 +455,25 @@ ol,ul{padding-left:22px}
   </section>
 </main>
 
+<!-- FRACTION POP GAME (Alt+G, Alt+Space, or the Game icon) -->
+<div class="game" id="game" role="dialog" aria-modal="true" aria-label="Fraction Pop" hidden>
+  <div class="g-top">
+    <div class="g-target">Pop every bubble equal to <span class="g-goal" id="gTarget">?</span></div>
+    <div class="g-stats">
+      <span>Score<b id="gScore">0</b></span>
+      <span>Level<b id="gLevel">1</b></span>
+      <span class="g-combo" id="gCombo"></span>
+      <span class="g-lives" id="gLives" aria-label="3 of 3 hearts left"><i>♥</i><i>♥</i><i>♥</i></span>
+      <button type="button" class="btn ghost g-x" id="gClose" aria-label="Close game">✕</button>
+    </div>
+  </div>
+  <div class="g-field" id="gField">
+    <div class="g-toast" id="gToast" role="status" aria-live="polite"></div>
+    <div class="g-banner" id="gBanner" hidden></div>
+    <div class="g-card" id="gCard" hidden></div>
+  </div>
+</div>
+
 <script>
 // smoke background
 (function(){
@@ -443,7 +512,8 @@ const topics=[
   ['Subtracting fractions','subtract'],['Borrowing with mixed numbers','subtract'],['Number line','subtract'],['Think-pair-share','subtract'],
   ['Multiplying straight across','multiply'],['Cross-canceling','cancel'],['Cross cancel with division','cancel'],['Simplify before multiplying / GCF','cancel'],['Area model','multiply'],['"Of" means multiply','multiply'],
   ['Keep Change Flip','divide'],['Reciprocal','divide'],['Why flipping works','divide'],['Exit ticket','divide'],
-  ['Practice problems','practice'],['Quiz / warm-up','practice']
+  ['Practice problems','practice'],['Quiz / warm-up','practice'],
+  ['Fraction Pop game','game'],['Equivalent fractions game','game']
 ];
 const q=document.getElementById('q'),res=document.getElementById('results');
 q.addEventListener('input',()=>{
@@ -453,7 +523,7 @@ q.addEventListener('input',()=>{
   res.innerHTML=hits.length?hits.map(([t,v])=>`<button data-v="${v}">${t}<small>${v}</small></button>`).join(''):'<button disabled>No lessons match</button>';
   res.hidden=false;
 });
-res.addEventListener('click',e=>{const b=e.target.closest('button[data-v]');if(!b)return;location.hash=b.dataset.v;res.hidden=true;q.value='';});
+res.addEventListener('click',e=>{const b=e.target.closest('button[data-v]');if(!b)return;res.hidden=true;q.value='';if(b.dataset.v==='game'){window.openFractionPop();return}location.hash=b.dataset.v;});
 q.addEventListener('keydown',e=>{if(e.key==='Enter'){const b=res.querySelector('button[data-v]');if(b)b.click();}if(e.key==='Escape')res.hidden=true;});
 document.addEventListener('click',e=>{if(!e.target.closest('.search'))res.hidden=true});
 
@@ -591,6 +661,192 @@ document.getElementById('ansForm').addEventListener('submit',e=>{
 document.getElementById('showBtn').onclick=()=>{const fb=document.getElementById('fb');fb.textContent=`Answer: ${cur.n}/${cur.m}`+(cur.n>cur.m&&cur.m>1?` (${Math.floor(cur.n/cur.m)} ${cur.n%cur.m}/${cur.m})`:'');fb.className='fb'};
 document.getElementById('nextBtn').onclick=newProb;
 newProb();
+
+// Fraction Pop: bubbles float up, pop the ones equal to the target before they escape
+(function(){
+  const $=id=>document.getElementById(id);
+  const game=$('game'),field=$('gField'),card=$('gCard'),toastEl=$('gToast'),banner=$('gBanner');
+  const still=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const gc=(a,b)=>b?gc(b,a%b):Math.abs(a);
+  const R=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+  const pick=a=>a[Math.floor(Math.random()*a.length)];
+  const simp=([n,d])=>{const k=gc(n,d)||1;return [n/k,d/k]};
+  const same=(a,b)=>a[0]*b[1]===b[0]*a[1];
+  const fr=([n,d])=>`<span class="frac"><b>${n}</b><b>${d}</b></span>`;
+  const txt=([n,d])=>d===1?String(n):n+'/'+d;
+  const SYM={'+':'+','-':'−','*':'×','/':'÷'};
+  // a bubble's expression: [[n,d]] or [[n,d],op,[n,d]]
+  const html=p=>p.map(t=>typeof t==='string'?`<span class="op">${SYM[t]}</span>`:fr(t)).join('');
+  const plain=p=>p.map(t=>typeof t==='string'?SYM[t]:txt(t)).join(' ');
+  const val=p=>{
+    if(p.length===1)return simp(p[0]);
+    const [[a,b],op,[c,e]]=p;
+    return simp(op==='+'?[a*e+c*b,b*e]:op==='-'?[a*e-c*b,b*e]:op==='*'?[a*c,b*e]:[a*e,b*c]);
+  };
+  // build an expression whose value is n/d
+  const FORMS=['eq','add','sub','mul','div'];
+  function make(form,[n,d]){
+    let k,x;
+    if(form==='add'){const lo=n===1?2:1;k=R(lo,Math.max(lo,Math.min(lo+2,Math.floor(24/d))));const N=n*k,D=d*k,a=R(1,N-1);return [[a,D],'+',[N-a,D]]}
+    if(form==='sub'){k=R(1,Math.max(1,Math.min(3,Math.floor(24/d))));const N=n*k,D=d*k,c=R(1,Math.max(1,Math.min(D-N,4)));return [[N+c,D],'-',[c,D]]}
+    if(form==='mul'||form==='div'){do x=R(2,7);while(x===n||x===d);return form==='mul'?[[n,x],'*',[x,d]]:[[n,x],'/',[d,x]]}
+    k=Math.random()<.2?1:R(2,Math.min(6,Math.floor(30/d)));
+    return [[n*k,d*k]];
+  }
+  // "add the tops and the bottoms" trap: looks like the target if you add wrong
+  function trap([n,d]){
+    for(let t=0;t<30;t++){
+      const k=R(1,2),N=n*k,D=d*k;if(N<2||D<4)continue;
+      const a=R(1,N-1),b=R(2,D-2),p=[[a,b],'+',[N-a,D-b]];
+      if(!same(val(p),[n,d]))return p;
+    }
+    return null;
+  }
+  const isTrap=(p,t)=>p.length===3&&p[1]==='+'&&same([p[0][0]+p[2][0],p[0][1]+p[2][1]],t);
+  const POOL=[];for(let d=2;d<=8;d++)for(let n=1;n<d;n++)if(gc(n,d)===1)POOL.push([n,d]);
+  function decoy(t){
+    const tv=t[0]/t[1],near=POOL.filter(v=>!same(v,t)&&Math.abs(v[0]/v[1]-tv)<=.3);
+    return pick(near.length?near:POOL.filter(v=>!same(v,t)));
+  }
+  const EASY=[[1,2],[1,3],[2,3],[1,4],[3,4]],HARD=[...EASY,[2,5],[3,5],[4,5],[1,6],[5,6],[3,8],[5,8]];
+  const NEWS={2:'Adding unlocked',3:'Subtracting unlocked',4:'Multiplying unlocked',5:'Dividing unlocked. Watch for tricks!'};
+  const PER=6;
+
+  let S=null,state='idle',raf=0,last=0,spawnT=0,waitT=0,toastT=0,banT=0,opener=null,best=0,W=0,H=0;
+  try{best=+localStorage.getItem('fractionPopBest')||0}catch(e){}
+  const measure=()=>{W=field.clientWidth;H=field.clientHeight};
+  addEventListener('resize',measure);
+  const mult=()=>Math.min(5,1+Math.floor(S.combo/4));
+  const drop=b=>{S.bubbles=S.bubbles.filter(x=>x!==b)};
+  const place=(b,t)=>{b.el.style.transform=`translate(${still?b.x:b.x+Math.sin(t/650+b.ph)*5}px,${b.y}px)`};
+
+  function hud(){
+    $('gScore').textContent=S.score;$('gLevel').textContent=S.level;
+    const m=mult();$('gCombo').textContent=m>1?'Combo ×'+m:'';
+    const L=$('gLives');L.innerHTML=[0,1,2].map(i=>`<i${i<S.lives?'':' class="lost"'}>♥</i>`).join('');
+    L.setAttribute('aria-label',S.lives+' of 3 hearts left');
+  }
+  function setTarget(){
+    const pool=S.level<3?EASY:HARD;let t;
+    do t=pick(pool);while(S.target&&same(t,S.target));
+    S.target=t;$('gTarget').innerHTML=fr(t);$('gTarget').setAttribute('aria-label',txt(t));
+  }
+  function toast(m){toastEl.textContent=m;toastEl.classList.add('on');clearTimeout(toastT);toastT=setTimeout(()=>toastEl.classList.remove('on'),2600)}
+  function float(b,s){
+    const f=document.createElement('span');f.className='g-plus';f.textContent=s;
+    f.style.left=(b.x+b.w/2)+'px';f.style.top=b.y+'px';field.appendChild(f);setTimeout(()=>f.remove(),800);
+  }
+  function spawn(){
+    const forms=FORMS.slice(0,Math.min(FORMS.length,S.level));
+    let p=null;
+    if(Math.random()<.4||S.dry>=3)p=make(pick(forms),S.target);
+    else{if(S.level>=5&&Math.random()<.3)p=trap(S.target);if(!p)p=make(pick(forms),decoy(S.target))}
+    const match=same(val(p),S.target);S.dry=match?0:S.dry+1;
+    const el=document.createElement('button');el.type='button';el.className='bub';el.innerHTML=html(p);el.setAttribute('aria-label',plain(p));
+    field.appendChild(el);
+    const w=el.offsetWidth,h=el.offsetHeight;let x=6;
+    for(let t=0;t<10;t++){x=R(6,Math.max(6,W-w-6));if(!S.bubbles.some(b=>b.y>H-h*1.8&&x<b.x+b.w+10&&b.x<x+w+10))break}
+    const b={el,p,match,x,y:H+6,w,h,v:H*(.08+.014*S.level)*(.85+Math.random()*.3),ph:Math.random()*7};
+    S.bubbles.push(b);place(b,performance.now());
+  }
+  function hurt(){
+    S.lives--;hud();
+    field.classList.remove('hit');void field.offsetWidth;field.classList.add('hit');
+    if(S.lives<=0)end();
+  }
+  function levelUp(){
+    S.level++;
+    for(const b of S.bubbles){b.el.classList.add('fade');setTimeout(()=>b.el.remove(),300)}
+    S.bubbles=[];setTarget();hud();
+    banner.innerHTML=`<div class="g-lvl">Level ${S.level}</div><div>New target: ${fr(S.target)}</div>`+(NEWS[S.level]?`<div class="g-new">${NEWS[S.level]}</div>`:'');
+    banner.hidden=false;banner.style.animation='none';void banner.offsetWidth;banner.style.animation='';
+    clearTimeout(banT);banT=setTimeout(()=>banner.hidden=true,1700);
+    waitT=1.7;spawnT=0;
+  }
+  function loop(now){
+    if(state!=='playing')return;
+    raf=requestAnimationFrame(loop);
+    const dt=Math.min(.05,(now-last)/1000);last=now;
+    if(waitT>0)waitT-=dt;
+    else if((spawnT-=dt)<=0){spawn();spawnT=Math.max(.55,1.45-.1*S.level)}
+    for(const b of S.bubbles.slice()){
+      b.y-=b.v*dt;place(b,now);
+      if(b.y<-b.h-4){
+        drop(b);b.el.remove();
+        if(b.match){S.combo=0;toast(`Missed ${plain(b.p)}. It was equal to ${txt(S.target)}.`);hurt();if(state!=='playing')return}
+      }
+    }
+  }
+  function hit(t){
+    if(state!=='playing'||!t.closest)return;
+    const el=t.closest('.bub'),b=el&&S.bubbles.find(x=>x.el===el);if(!b)return;
+    drop(b);
+    if(b.match){
+      S.combo++;const pts=10*S.level*mult();S.score+=pts;S.got++;
+      b.el.classList.add('pop');setTimeout(()=>b.el.remove(),300);
+      float(b,'+'+pts);hud();
+      if(S.got%PER===0)levelUp();
+    }else{
+      S.combo=0;b.el.classList.add('bad');setTimeout(()=>b.el.remove(),450);
+      const v=val(b.p),lhs=plain(b.p);
+      toast((lhs===txt(v)?`${lhs} isn't equal to ${txt(S.target)}.`:`${lhs} = ${txt(v)}, not ${txt(S.target)}.`)+(isTrap(b.p,S.target)?' Don\'t add the bottoms!':''));
+      hurt();
+    }
+  }
+  field.addEventListener('pointerdown',e=>hit(e.target));
+  field.addEventListener('click',e=>{if(e.detail===0)hit(e.target)}); // keyboard Enter/Space on a bubble
+
+  function showCard(kind,newBest){
+    const keys='<p class="keys">Alt+G opens and closes the game · P pauses · Esc closes</p>';
+    let h;
+    if(kind==='over')h=`<h2>Game over</h2><p>You scored <b>${S.score}</b> and reached level ${S.level}.</p><p>${newBest?'<b>New best score!</b>':'Best: '+best}</p><div class="row"><button type="button" class="btn" data-g="start">Play again</button><button type="button" class="btn ghost" data-g="close">Back to lessons</button></div>`;
+    else if(kind==='paused')h=`<h2>Paused</h2><p>Score ${S.score} · Level ${S.level}</p><div class="row"><button type="button" class="btn" data-g="resume">Resume</button><button type="button" class="btn ghost" data-g="start">Restart</button></div>${keys}`;
+    else h=`<h2>Fraction Pop</h2><p>Bubbles float up the screen. Pop every one that's equal to the target fraction.</p><p>Pop a wrong one, or let a right one float away, and you lose a heart. Lose all 3 and it's game over.</p><p>Every ${PER} pops you level up. Bubbles get faster, and adding, subtracting, multiplying, and dividing join in.</p>${best?`<p>Best: <b>${best}</b></p>`:''}<div class="row"><button type="button" class="btn" data-g="start">Start</button></div>${keys}`;
+    card.innerHTML=`<div class="g-box">${h}</div>`;card.hidden=false;
+    if(!game.hidden)card.querySelector('.btn').focus();
+  }
+  card.addEventListener('click',e=>{const a=e.target.closest('[data-g]')?.dataset.g;if(a==='start')start();else if(a==='resume')resume();else if(a==='close')close()});
+
+  function start(){
+    field.querySelectorAll('.bub,.g-plus').forEach(e=>e.remove());
+    banner.hidden=true;toastEl.classList.remove('on');
+    S={score:0,lives:3,level:1,got:0,combo:0,target:null,bubbles:[],dry:0};
+    setTarget();hud();waitT=.3;spawnT=0;resume();
+  }
+  function resume(){card.hidden=true;state='playing';measure();last=performance.now();cancelAnimationFrame(raf);raf=requestAnimationFrame(loop);game.focus()}
+  function pause(){if(state!=='playing')return;state='paused';cancelAnimationFrame(raf);showCard('paused')}
+  function end(){
+    state='over';cancelAnimationFrame(raf);
+    const nb=S.score>best;
+    if(nb){best=S.score;try{localStorage.setItem('fractionPopBest',String(best))}catch(e){}}
+    showCard('over',nb);
+  }
+  function open(){
+    if(!game.hidden)return;
+    opener=document.activeElement;game.hidden=false;document.body.style.overflow='hidden';measure();
+    showCard(state==='paused'?'paused':'start');
+  }
+  function close(){
+    if(game.hidden)return;
+    pause();game.hidden=true;document.body.style.overflow='';
+    if(location.hash==='#game')history.replaceState(null,'',location.pathname+location.search);
+    if(opener&&opener.focus&&document.contains(opener))opener.focus();
+  }
+
+  game.tabIndex=-1;
+  addEventListener('keydown',e=>{
+    if(e.altKey&&!e.ctrlKey&&!e.metaKey&&(e.code==='KeyG'||e.code==='Space')){e.preventDefault();game.hidden?open():close();return}
+    if(game.hidden)return;
+    if(e.key==='Escape'){e.preventDefault();close()}
+    else if((e.key==='p'||e.key==='P')&&state==='playing')pause();
+  });
+  document.addEventListener('visibilitychange',()=>{if(document.hidden)pause()});
+  $('gClose').addEventListener('click',close);
+  document.querySelectorAll('[data-game]').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();open()}));
+  addEventListener('hashchange',()=>{if(location.hash==='#game')open()});
+  window.openFractionPop=open;
+  if(location.hash==='#game')open();
+})();
 </script>
 
 </body>
