@@ -1,1520 +1,597 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <title>Aiden's Browser</title>
-
-  <style>
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #0d0d1a;
-      color: white;
-      height: 100vh;
-      overflow: hidden;
-    }
-
-    /* =========================
-       LOGIN
-    ========================= */
-
-    #login {
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-    }
-
-    #login h1 {
-      font-size: 3rem;
-      margin: 0 0 10px;
-
-      text-shadow:
-        0 0 5px white,
-        0 0 10px white,
-        0 0 20px #00d4ff,
-        0 0 30px #00d4ff,
-        0 0 40px #00d4ff;
-    }
-
-    #login h2 {
-      color: #ddd;
-      margin-bottom: 25px;
-    }
-
-    #username,
-    #password {
-      width: 260px;
-      padding: 13px;
-      margin-bottom: 12px;
-
-      background: #17172a;
-      color: white;
-
-      border: 2px solid #00d4ff;
-      border-radius: 6px;
-
-      outline: none;
-      font-size: 16px;
-
-      box-shadow: 0 0 10px #00d4ff;
-    }
-
-    #loginButton {
-
-      padding: 12px 28px;
-
-      border: none;
-      border-radius: 6px;
-
-      background: #00d4ff;
-      color: white;
-
-      font-weight: bold;
-      font-size: 16px;
-
-      cursor: pointer;
-
-      box-shadow: 0 0 12px #00d4ff;
-    }
-
-    #loginButton:hover {
-      background: #0099cc;
-    }
-
-    #message {
-      margin-top: 15px;
-      max-width: 90%;
-      font-weight: bold;
-
-      /* Lets "Reason: ..." and the contact line sit on separate lines */
-      white-space: pre-line;
-    }
-
-
-    /* =========================
-       BROWSER
-    ========================= */
-
-    #browser {
-      display: none;
-      height: 100vh;
-      width: 100%;
-      background: #101018;
-
-      /* Stack the bars on top, and let the
-         content area fill whatever is left. */
-      flex-direction: column;
-    }
-
-
-    /* TOP BAR */
-
-    .topbar {
-      height: 58px;
-
-      display: flex;
-      align-items: center;
-
-      gap: 7px;
-
-      padding: 8px 12px;
-
-      background: #181824;
-
-      border-bottom: 1px solid #303044;
-    }
-
-
-    /* BUTTONS */
-
-    .nav {
-      width: 38px;
-      height: 38px;
-
-      border: none;
-      border-radius: 7px;
-
-      background: #242438;
-      color: #ddd;
-
-      font-size: 20px;
-
-      cursor: pointer;
-    }
-
-    .nav:hover {
-      background: #30304a;
-      color: white;
-    }
-
-    /* Greyed out when there's nowhere to go */
-    .nav:disabled {
-      opacity: 0.35;
-      cursor: default;
-    }
-
-    .nav:disabled:hover {
-      background: #242438;
-      color: #ddd;
-    }
-
-
-    /* ADDRESS BAR */
-
-    #url {
-      flex: 1;
-
-      height: 38px;
-
-      padding: 0 15px;
-
-      border: 1px solid #36364e;
-      border-radius: 20px;
-
-      background: #0e0e19;
-      color: white;
-
-      outline: none;
-
-      font-size: 14px;
-    }
-
-    #url:focus {
-      border-color: #00d4ff;
-
-      box-shadow:
-        0 0 8px rgba(0, 212, 255, 0.4);
-    }
-
-    #go {
-      height: 38px;
-
-      padding: 0 18px;
-
-      border: none;
-      border-radius: 7px;
-
-      background: #00d4ff;
-      color: white;
-
-      font-weight: bold;
-
-      cursor: pointer;
-    }
-
-    #go:hover {
-      background: #0099cc;
-    }
-
-
-    /* ACCOUNT (who's logged in) */
-
-    .account {
-      display: flex;
-      align-items: center;
-
-      gap: 6px;
-
-      padding-left: 6px;
-
-      color: #ddd;
-      font-size: 13px;
-
-      white-space: nowrap;
-    }
-
-    /* Only shown for the master account; click it to open the admin panel */
-    #adminBadge {
-      padding: 2px 7px;
-
-      border: none;
-      border-radius: 10px;
-
-      background: #00d4ff;
-      color: #0d0d1a;
-
-      font-size: 11px;
-      font-weight: bold;
-
-      cursor: pointer;
-    }
-
-    #adminBadge:hover {
-      background: #0099cc;
-    }
-
-    #adminBadge[hidden] {
-      display: none;
-    }
-
-
-    /* =========================
-       ADMIN PANEL
-    ========================= */
-
-    #adminPanel {
-      height: 100vh;
-
-      overflow-y: auto;
-
-      padding: 24px 16px;
-
-      background:
-        radial-gradient(
-          circle at top,
-          #14142a,
-          #080810
-        );
-    }
-
-    #adminPanel[hidden] {
-      display: none;
-    }
-
-    .panelHeader {
-      max-width: 760px;
-      margin: 0 auto 10px;
-
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-
-      gap: 10px;
-    }
-
-    .panelHeader h1 {
-      margin: 0;
-
-      text-shadow:
-        0 0 10px #00d4ff;
-    }
-
-    .panelHeader div {
-      display: flex;
-      gap: 8px;
-    }
-
-    #panelMessage {
-      max-width: 760px;
-      min-height: 20px;
-      margin: 0 auto 10px;
-
-      font-weight: bold;
-    }
-
-    #userList {
-      max-width: 760px;
-      margin: 0 auto;
-
-      display: flex;
-      flex-direction: column;
-
-      gap: 12px;
-    }
-
-    .userRow {
-      padding: 14px;
-
-      border: 1px solid #303044;
-      border-radius: 8px;
-
-      background: #181824;
-
-      display: flex;
-      flex-direction: column;
-
-      gap: 10px;
-    }
-
-    .userRow.off {
-      border-color: #ff0055;
-    }
-
-    .userInfo {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-
-      gap: 8px;
-    }
-
-    .userInfo b {
-      font-size: 17px;
-    }
-
-    .status {
-      font-size: 13px;
-      color: #00ffcc;
-    }
-
-    .userRow.off .status {
-      color: #ff0055;
-    }
-
-    .userActions {
-      display: flex;
-      flex-wrap: wrap;
-
-      gap: 8px;
-    }
-
-    .panelInput {
-      flex: 1;
-      min-width: 160px;
-
-      height: 36px;
-
-      padding: 0 12px;
-
-      border: 1px solid #36364e;
-      border-radius: 6px;
-
-      background: #0e0e19;
-      color: white;
-
-      outline: none;
-    }
-
-    .panelInput:focus {
-      border-color: #00d4ff;
-    }
-
-    /* The reason box sits in a column, where "flex: 1" would squash its height */
-    .userRow > .panelInput {
-      flex: none;
-    }
-
-    .panelButton {
-      height: 36px;
-
-      padding: 0 14px;
-
-      border: none;
-      border-radius: 6px;
-
-      background: #00d4ff;
-      color: #0d0d1a;
-
-      font-weight: bold;
-
-      cursor: pointer;
-    }
-
-    .panelButton:hover {
-      background: #0099cc;
-    }
-
-    .panelButton.danger {
-      background: #ff0055;
-      color: white;
-    }
-
-    .panelButton.danger:hover {
-      background: #cc0044;
-    }
-
-    .panelButton.plain {
-      background: #242438;
-      color: #ddd;
-    }
-
-    .panelButton.plain:hover {
-      background: #30304a;
-    }
-
-
-    /* TAB BAR */
-
-    .tabs {
-      height: 38px;
-
-      display: flex;
-      align-items: flex-end;
-
-      background: #0c0c14;
-
-      padding-left: 10px;
-    }
-
-    .tab {
-      height: 32px;
-
-      min-width: 190px;
-      max-width: 260px;
-
-      padding: 8px 15px;
-
-      background: #181824;
-
-      border-radius: 7px 7px 0 0;
-
-      color: #ddd;
-
-      font-size: 13px;
-
-      /* Long site names get "..." instead of overflowing */
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-
-    /* NOTICE BAR (for sites that block iframes) */
-
-    #notice {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-
-      gap: 10px;
-
-      padding: 6px 14px;
-
-      background: #1c1c2e;
-      color: #aaa;
-
-      font-size: 13px;
-
-      border-bottom: 1px solid #303044;
-    }
-
-    /* Without this, "display: flex" above would
-       beat the hidden attribute and never hide it */
-    #notice[hidden] {
-      display: none;
-    }
-
-    #openNewTab {
-      padding: 5px 12px;
-
-      border: 1px solid #00d4ff;
-      border-radius: 6px;
-
-      background: transparent;
-      color: #00d4ff;
-
-      font-size: 13px;
-
-      cursor: pointer;
-    }
-
-    #openNewTab:hover {
-      background: #00d4ff;
-      color: #0d0d1a;
-    }
-
-
-    /* CONTENT */
-
-    #content {
-      width: 100%;
-
-      /* Fill all the space left under the bars */
-      flex: 1;
-      min-height: 0;
-
-      background: white;
-    }
-
-    #webview {
-      width: 100%;
-      height: 100%;
-
-      border: none;
-
-      background: white;
-    }
-
-
-    /* HOME */
-
-    #home {
-      height: 100%;
-
-      display: flex;
-
-      flex-direction: column;
-
-      justify-content: center;
-
-      align-items: center;
-
-      background:
-        radial-gradient(
-          circle at center,
-          #14142a,
-          #080810
-        );
-    }
-
-    #home h1 {
-      font-size: 42px;
-
-      margin-bottom: 10px;
-
-      text-shadow:
-        0 0 10px #00d4ff;
-    }
-
-    #home p {
-      color: #888;
-    }
-
-
-    /* PHONES: shrink things so the top bar fits */
-
-    @media (max-width: 600px) {
-
-      #login h1 {
-        font-size: 2rem;
-        padding: 0 16px;
-      }
-
-      #username,
-      #password {
-        width: 80%;
-      }
-
-      /* Just the 👤 and badge, no name, to save space */
-      #accountName {
-        display: none;
-      }
-
-      .topbar {
-        gap: 4px;
-        padding: 8px 6px;
-      }
-
-      .nav {
-        width: 32px;
-        height: 32px;
-        font-size: 16px;
-        flex-shrink: 0;
-      }
-
-      #url {
-        min-width: 0;
-        padding: 0 10px;
-      }
-
-      #go {
-        padding: 0 12px;
-      }
-
-      .tab {
-        min-width: 0;
-      }
-
-      #notice span {
-        font-size: 12px;
-      }
-
-      #home h1 {
-        font-size: 30px;
-      }
-
-    }
-
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Fraction Lab</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500&family=Poppins:wght@400;500;600&display=swap">
+<style>
+[hidden]{display:none!important}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0}
+:root{padding-top:env(safe-area-inset-top,0px)}
+</style>
+<style>
+/* Layout: one dark blurred-smoke stage; centered title, search, icon dock; lessons open in a glass panel below */
+:root{
+  --bg:#0b0b0c; --smoke:#3a3a3d; --glass:rgba(255,255,255,.05); --line:rgba(255,255,255,.16);
+  --fg:#ececee; --muted:#9a9aa1; --accent:#7fa6ff; --good:#7bd88f; --bad:#ff8a8a;
+  --display:"Lexend",system-ui,sans-serif; --body:"Poppins",system-ui,sans-serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{min-height:100%}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:15px;line-height:1.6;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 64px;overflow-x:hidden}
+#smoke{position:fixed;inset:0;z-index:0;pointer-events:none;filter:blur(70px);opacity:.75}
+main{position:relative;z-index:1;max-width:820px;margin:0 auto}
+header{display:flex;flex-direction:column;align-items:center;gap:28px;padding-top:min(22vh,190px);padding-bottom:28px}
+h1{font-family:var(--display);font-weight:400;font-size:clamp(48px,9vw,80px);letter-spacing:-.03em;line-height:1;margin:0;
+  background:linear-gradient(180deg,#fff 20%,#9c9ca2 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+h1 span{font-weight:300}
+.search{width:min(560px,100%);position:relative}
+.search input{width:100%;font:inherit;font-size:16px;color:var(--fg);background:rgba(40,40,42,.7);border:1px solid var(--line);
+  border-radius:8px;padding:15px 20px;outline:none;backdrop-filter:blur(8px)}
+.search input::placeholder{color:var(--muted)}
+.search input:focus{border-color:var(--accent)}
+.results{position:absolute;left:0;right:0;top:calc(100% + 6px);background:#1a1a1c;border:1px solid var(--line);border-radius:8px;overflow:hidden;z-index:5}
+.results button{display:block;width:100%;text-align:left;background:none;border:0;color:var(--fg);font:inherit;padding:10px 18px;cursor:pointer}
+.results button:hover,.results button:focus-visible{background:rgba(255,255,255,.07);outline:none}
+.results small{color:var(--muted);margin-left:8px}
+.dock{display:flex;flex-wrap:wrap;justify-content:center;gap:12px 36px}
+.dock a{display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--fg);text-decoration:none;font-size:12px;font-weight:500;
+  padding:6px;border-radius:10px;transition:transform .2s}
+.dock a span{color:#b8b8be}
+.dock a:hover{transform:translateY(-3px)}
+.dock a:focus-visible{outline:2px solid var(--accent)}
+.dock a[aria-current="page"] svg{stroke:var(--accent)}
+.dock svg{width:36px;height:36px;fill:none;stroke:#fff;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.panel{background:var(--glass);border:1px solid var(--line);border-radius:14px;padding:28px clamp(18px,4vw,36px);backdrop-filter:blur(14px)}
+.panel h2{font-family:var(--display);font-weight:400;font-size:30px;margin:0 0 4px;text-wrap:balance}
+.panel h3{font-family:var(--display);font-weight:500;font-size:18px;margin:28px 0 8px;color:#fff}
+.panel p,.panel li{color:#d4d4d8;max-width:66ch}
+.lede{color:var(--muted)!important;margin-top:0}
+.tag{display:inline-block;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+ol,ul{padding-left:22px}
+.frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;font-family:var(--display);line-height:1.1;margin:0 3px;font-variant-numeric:tabular-nums}
+.frac b{font-weight:400;padding:0 3px}
+.frac b:first-child{border-bottom:1.5px solid currentColor}
+.ex{font-family:var(--display);font-size:22px;display:flex;flex-wrap:wrap;align-items:center;gap:6px;background:rgba(0,0,0,.35);
+  border:1px solid var(--line);border-radius:10px;padding:14px 18px;margin:10px 0;overflow-x:auto}
+.ex .op{color:var(--muted);padding:0 4px}
+.ex .hl{color:var(--accent)}
+.method{border-top:1px solid var(--line);padding-top:6px}
+.class{background:rgba(127,166,255,.08);border:1px solid rgba(127,166,255,.3);border-radius:10px;padding:12px 16px;margin:10px 0}
+.class strong{color:var(--accent);font-weight:600}
+.bars{display:grid;gap:8px;margin:12px 0}
+.bar{display:flex;height:28px;border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.bar i{flex:1;border-right:1px solid var(--line)}
+.bar i:last-child{border-right:0}
+.bar i.on{background:rgba(127,166,255,.55)}
+.bar i.on2{background:rgba(123,216,143,.55)}
+.barlbl{font-size:13px;color:var(--muted)}
+/* practice */
+.prob{font-size:30px;justify-content:center;padding:22px}
+.answer{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:center;margin:14px 0}
+.answer input{width:90px;font:inherit;font-size:18px;text-align:center;color:var(--fg);background:rgba(0,0,0,.4);border:1px solid var(--line);border-radius:8px;padding:8px}
+.answer input:focus{outline:none;border-color:var(--accent)}
+.btn{font:inherit;font-weight:500;color:#0b0b0c;background:#e9e9ee;border:0;border-radius:8px;padding:10px 18px;cursor:pointer}
+.btn.ghost{background:transparent;color:var(--fg);border:1px solid var(--line)}
+.btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.chips button{font:inherit;font-size:13px;color:var(--fg);background:transparent;border:1px solid var(--line);border-radius:999px;padding:6px 14px;cursor:pointer}
+.chips button[aria-pressed="true"]{background:var(--fg);color:#0b0b0c}
+.fb{text-align:center;min-height:1.6em;font-weight:500}
+.fb.ok{color:var(--good)} .fb.no{color:var(--bad)}
+.score{text-align:center;color:var(--muted);font-size:13px;font-variant-numeric:tabular-nums}
+.home-hint{text-align:center;color:var(--muted);font-size:13px}
+/* step-by-step animations */
+.anim{margin:12px 0 4px;border:1px solid var(--line);border-radius:12px;background:rgba(0,0,0,.35);padding:14px;display:grid;gap:10px}
+.anim svg{width:100%;height:auto;display:block}
+.anim svg text{font-family:var(--display);font-size:36px;text-anchor:middle;fill:var(--fg)}
+.anim .whole{font-size:44px}
+.anim .op{fill:var(--muted)}
+.anim .lbl{font-family:var(--body);font-size:17px;font-weight:500;fill:var(--accent);letter-spacing:.04em}
+.anim .rep{font-size:24px}
+.anim line{stroke:var(--fg);stroke-width:2.5}
+.anim line.strike{stroke:var(--bad);stroke-width:3}
+.anim .hl text,.anim text.hl{fill:var(--accent)}
+.anim .hl line{stroke:var(--accent)}
+.anim .g text,.anim text.g{fill:var(--good)}
+.anim .g line{stroke:var(--good)}
+.anim .dim{opacity:.35}
+.anim .new{animation:pop .5s ease both}
+.arrow path{fill:none;stroke:var(--accent);stroke-width:2.5;stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:1;animation:draw .7s ease forwards}
+.arrow polygon{fill:var(--accent);opacity:0;animation:pop .2s .65s forwards}
+.arrow text{font-family:var(--body)!important;font-size:17px!important;font-weight:500;fill:var(--accent)!important;opacity:0;animation:pop .3s .45s forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.why ol{margin:0;padding-left:20px;font-size:14px}
+.why li{margin:2px 0}
+.why{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:18px 0 6px}
+.why div{border:1px solid var(--line);border-radius:10px;padding:14px 16px;background:rgba(255,255,255,.03);min-width:0}
+.why h4{margin:0 0 6px;font-family:var(--display);font-weight:500;font-size:15px;color:var(--accent);letter-spacing:.02em}
+.why p{margin:0 0 8px;font-size:14px}
+.why p:last-child{margin-bottom:0}
+@keyframes pop{from{opacity:0}to{opacity:1}}
+.cap{display:flex;flex-wrap:wrap;gap:4px 12px;align-items:baseline;min-height:3.4em}
+.cnt{font-size:12px;color:var(--accent);white-space:nowrap;letter-spacing:.08em;text-transform:uppercase;font-variant-numeric:tabular-nums}
+.cap p{margin:0;flex:1 1 260px;min-width:0}
+.ctl{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.dots{margin-left:auto;display:flex;gap:6px}
+.dots i{width:8px;height:8px;border-radius:50%;background:var(--line)}
+.dots i.on{background:var(--accent)}
+.btn:disabled{opacity:.35;cursor:default}
+@media (prefers-reduced-motion:reduce){.anim .new,.arrow path,.arrow polygon,.arrow text{animation:none;opacity:1;stroke-dashoffset:0}}
+@media (prefers-reduced-motion:reduce){.dock a{transition:none}}
+@media (max-width:480px){header{padding-top:12vh}.dock{gap:10px 22px}.ex{font-size:19px}.prob{font-size:24px}}
+</style>
 </head>
-
 <body>
 
+<canvas id="smoke" aria-hidden="true"></canvas>
+<main>
+  <header>
+    <h1>Fraction <span>Lab</span></h1>
+    <div class="search">
+      <input id="q" type="search" placeholder="Search Lessons" autocomplete="off" aria-label="Search lessons">
+      <div class="results" id="results" hidden></div>
+    </div>
+    <nav class="dock" aria-label="Lessons">
+      <a href="#add"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg><span>Add</span></a>
+      <a href="#subtract"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12h8"/></svg><span>Subtract</span></a>
+      <a href="#multiply"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9 9l6 6M15 9l-6 6"/></svg><span>Multiply</span></a>
+      <a href="#divide"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 12h8"/><circle cx="12" cy="8.5" r=".6" fill="#fff"/><circle cx="12" cy="15.5" r=".6" fill="#fff"/></svg><span>Divide</span></a>
+      <a href="#cancel"><svg viewBox="0 0 24 24"><path d="M5 4l14 16"/><path d="M9 4h-3v6h3M18 14h-3v6h3"/></svg><span>Cross Cancel</span></a>
+      <a href="#practice"><svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h5M8 16l2 2 4-4"/></svg><span>Practice</span></a>
+    </nav>
+  </header>
 
-  <!-- =========================
-       LOGIN SCREEN
-  ========================= -->
+  <p class="home-hint" id="hint">Pick a lesson above or search for a topic like "common denominator" or "keep change flip".</p>
 
-  <div id="login">
-
-    <h1>Welcome To Aiden's Safe Place</h1>
-
-    <h2>Log In</h2>
-
-    <input
-      id="username"
-      type="text"
-      placeholder="Username"
-      autocomplete="username"
-      autocapitalize="none"
-      spellcheck="false"
-    >
-
-    <input
-      id="password"
-      type="password"
-      placeholder="Password"
-      autocomplete="current-password"
-    >
-
-    <button id="loginButton">
-      Submit
-    </button>
-
-    <div id="message"></div>
-
-  </div>
-
-
-
-  <!-- =========================
-       BROWSER
-  ========================= -->
-
-  <div id="browser">
-
-
-    <div class="topbar">
-
-      <button id="backButton" class="nav" onclick="back()" title="Back" disabled>
-        ←
-      </button>
-
-      <button id="forwardButton" class="nav" onclick="forward()" title="Forward" disabled>
-        →
-      </button>
-
-      <button class="nav" onclick="reload()" title="Reload">
-        ⟳
-      </button>
-
-      <button class="nav" onclick="goHome()" title="Home">
-        ⌂
-      </button>
-
-
-      <input
-        id="url"
-        type="text"
-        placeholder="Enter a website or search..."
-      >
-
-      <button id="go" onclick="navigate()">
-        Go
-      </button>
-
-
-      <div class="account">
-
-        👤 <span id="accountName"></span>
-
-        <button id="adminBadge" onclick="showPanel()" title="Open the admin panel" hidden>ADMIN</button>
-
-        <button class="nav" onclick="showLogin()" title="Log out">
-          ⏻
-        </button>
-
-      </div>
-
+  <!-- ADD -->
+  <section class="panel" id="add" hidden>
+    <span class="tag">Lesson 1</span>
+    <h2>Adding fractions</h2>
+    <p class="lede">You can only add pieces that are the same size. The bottom number (denominator) tells you the piece size, so it has to match first.</p>
+    <h3>Watch it step by step</h3>
+    <div class="anim" data-anim="add"></div>
+    <div class="why">
+      <div><h4>Steps</h4><ol><li>Find the LCD.</li><li>Rewrite both fractions.</li><li>Add the tops, keep the bottom.</li><li>Simplify.</li></ol></div>
+      <div><h4>Why</h4><p>The bottom is the piece size. You can only add same-size pieces.</p></div>
+      <div><h4>Why it matters</h4><p>Recipes, measuring, and algebra (x/4 + x/3) all use it.</p></div>
     </div>
 
+    <h3>Same denominator</h3>
+    <p>Add the tops. Keep the bottom.</p>
+    <div class="ex"><span class="frac"><b>2</b><b>7</b></span><span class="op">+</span><span class="frac"><b>3</b><b>7</b></span><span class="op">=</span><span class="frac hl"><b>5</b><b>7</b></span></div>
 
-    <div class="tabs">
-
-      <div class="tab" id="tabTitle">
-        🌐 Aiden's Browser
-      </div>
-
+    <div class="method">
+    <h3>Different denominators: find a common denominator</h3>
+    <ol>
+      <li>Find the least common denominator (LCD), the smallest number both bottoms divide into.</li>
+      <li>Rewrite each fraction with that denominator. Whatever you do to the bottom, do to the top.</li>
+      <li>Add the tops, keep the bottom.</li>
+      <li>Simplify if you can.</li>
+    </ol>
+    <div class="ex"><span class="frac"><b>1</b><b>4</b></span><span class="op">+</span><span class="frac"><b>2</b><b>3</b></span><span class="op">→</span><span class="frac"><b>3</b><b>12</b></span><span class="op">+</span><span class="frac"><b>8</b><b>12</b></span><span class="op">=</span><span class="frac hl"><b>11</b><b>12</b></span></div>
+    <div class="bars">
+      <div class="barlbl">1/4 cut into twelfths = 3/12</div>
+      <div class="bar"><i class="on"></i><i class="on"></i><i class="on"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      <div class="barlbl">2/3 cut into twelfths = 8/12</div>
+      <div class="bar"><i class="on2"></i><i class="on2"></i><i class="on2"></i><i class="on2"></i><i class="on2"></i><i class="on2"></i><i class="on2"></i><i class="on2"></i><i></i><i></i><i></i><i></i></div>
+    </div>
     </div>
 
-
-    <!-- Shown only while a website is open -->
-    <div id="notice" hidden>
-
-      <span>
-        Page broken? Big sites (YouTube, logins) don't always work through the proxy.
-      </span>
-
-      <button id="openNewTab" onclick="openInNewTab()">
-        Open in new tab ↗
-      </button>
-
+    <div class="method">
+    <h3>Fast method: the butterfly</h3>
+    <p>Good for two fractions when you don't want to hunt for the LCD.</p>
+    <ol>
+      <li>Cross-multiply up the wings: 1×3 = 3 and 4×2 = 8. Add them: 11. That's your top.</li>
+      <li>Multiply the bottoms (the body): 4×3 = 12. That's your bottom.</li>
+      <li>Simplify at the end, since this gives a bigger denominator than needed sometimes.</li>
+    </ol>
     </div>
 
-
-    <div id="content">
-
-      <div id="home">
-
-        <h1>Aiden's Browser</h1>
-
-        <p>
-          Enter a website above to get started.
-        </p>
-
-      </div>
-
-      <!--
-        sandbox: the page can run its scripts and forms,
-        but it can't take over the whole browser tab
-        (no "allow-top-navigation").
-      -->
-      <iframe
-        id="webview"
-        style="display:none;"
-        title="Web Browser"
-        sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"
-      ></iframe>
-
+    <div class="method">
+    <h3>Mixed numbers</h3>
+    <p>Turn them into improper fractions first: multiply the whole number by the bottom, add the top. 2<span class="frac"><b>1</b><b>3</b></span> = <span class="frac"><b>7</b><b>3</b></span>. Then add like normal.</p>
     </div>
 
-  </div>
+    <h3>In the classroom</h3>
+    <div class="class"><strong>Whiteboard check:</strong> teacher writes 1/2 + 1/3. Everyone writes just the LCD and holds it up. Quick way to see who's stuck on step 1 before moving on.</div>
+    <div class="class"><strong>Fraction strips:</strong> fold paper strips into halves, thirds, fourths, sixths. Lay them end to end to "see" that 1/2 + 1/3 fills 5 of the 6 sixths.</div>
+    <div class="class"><strong>Common mistake to call out:</strong> 1/2 + 1/3 ≠ 2/5. Adding the bottoms changes the piece size. Ask the class: "Is 2/5 bigger or smaller than 1/2 alone?" It's smaller, so it can't be right.</div>
+  </section>
 
-
-
-  <!-- =========================
-       ADMIN PANEL (admin accounts only)
-  ========================= -->
-
-  <div id="adminPanel" hidden>
-
-    <div class="panelHeader">
-
-      <h1>Admin Panel</h1>
-
-      <div>
-
-        <button class="panelButton" onclick="showBrowser()">
-          Open Browser
-        </button>
-
-        <button class="panelButton plain" onclick="showLogin()">
-          Log out
-        </button>
-
-      </div>
-
+  <!-- SUBTRACT -->
+  <section class="panel" id="subtract" hidden>
+    <span class="tag">Lesson 2</span>
+    <h2>Subtracting fractions</h2>
+    <p class="lede">Same rules as adding. Match the denominators, then subtract the tops.</p>
+    <h3>Watch it step by step</h3>
+    <div class="anim" data-anim="sub"></div>
+    <div class="why">
+      <div><h4>Steps</h4><ol><li>Find the LCD.</li><li>Borrow 1 whole if the top is too small.</li><li>Subtract wholes, then tops.</li><li>Simplify.</li></ol></div>
+      <div><h4>Why</h4><p>You can only take away same-size pieces. Borrowing works because 1 whole = 4/4.</p></div>
+      <div><h4>Why it matters</h4><p>Finding what's left or how much longer something is.</p></div>
     </div>
 
-    <p id="panelMessage"></p>
+    <h3>Same denominator</h3>
+    <div class="ex"><span class="frac"><b>5</b><b>8</b></span><span class="op">−</span><span class="frac"><b>2</b><b>8</b></span><span class="op">=</span><span class="frac hl"><b>3</b><b>8</b></span></div>
 
-    <!-- One card per account, filled in by loadUsers() -->
-    <div id="userList"></div>
+    <div class="method">
+    <h3>Different denominators</h3>
+    <ol>
+      <li>Find the LCD.</li>
+      <li>Rewrite both fractions.</li>
+      <li>Subtract the tops, keep the bottom.</li>
+      <li>Simplify.</li>
+    </ol>
+    <div class="ex"><span class="frac"><b>5</b><b>6</b></span><span class="op">−</span><span class="frac"><b>1</b><b>4</b></span><span class="op">→</span><span class="frac"><b>10</b><b>12</b></span><span class="op">−</span><span class="frac"><b>3</b><b>12</b></span><span class="op">=</span><span class="frac hl"><b>7</b><b>12</b></span></div>
+    <p>Butterfly works here too, just subtract the wings in order: (5×4) − (6×1) = 14, over 6×4 = 24, which simplifies to 7/12.</p>
+    </div>
 
-  </div>
+    <div class="method">
+    <h3>Borrowing with mixed numbers</h3>
+    <p>When the top fraction is too small, borrow 1 whole from the whole number and turn it into a fraction.</p>
+    <div class="ex">3<span class="frac"><b>1</b><b>4</b></span><span class="op">−</span>1<span class="frac"><b>3</b><b>4</b></span><span class="op">→</span>2<span class="frac"><b>5</b><b>4</b></span><span class="op">−</span>1<span class="frac"><b>3</b><b>4</b></span><span class="op">=</span><span class="hl">1</span><span class="frac hl"><b>2</b><b>4</b></span><span class="op">=</span><span class="hl">1</span><span class="frac hl"><b>1</b><b>2</b></span></div>
+    <p>The borrowed 1 became 4/4, and 1/4 + 4/4 = 5/4. Or skip borrowing: convert both to improper fractions (13/4 − 7/4 = 6/4).</p>
+    </div>
 
+    <h3>In the classroom</h3>
+    <div class="class"><strong>Number line race:</strong> draw a 0–2 line split into fourths on the board. Students start at 5/4 and "hop back" 3/4. Where do you land?</div>
+    <div class="class"><strong>Think-pair-share:</strong> give 3 1/4 − 1 3/4. One partner borrows, one converts to improper fractions. Compare answers. They should match.</div>
+    <div class="class"><strong>Common mistake:</strong> flipping the order to "make it work" (3/4 − 1/4 instead of 1/4 − 3/4). Order matters in subtraction.</div>
+  </section>
 
+  <!-- MULTIPLY -->
+  <section class="panel" id="multiply" hidden>
+    <span class="tag">Lesson 3</span>
+    <h2>Multiplying fractions</h2>
+    <p class="lede">The easiest one. No common denominator needed. Straight across: top times top, bottom times bottom.</p>
+    <h3>Watch it step by step</h3>
+    <div class="anim" data-anim="mult"></div>
+    <div class="why">
+      <div><h4>Steps</h4><ol><li>Cross-cancel if you can.</li><li>Tops × tops.</li><li>Bottoms × bottoms.</li><li>Simplify.</li></ol></div>
+      <div><h4>Why</h4><p>× means "of." 2/3 × 3/5 is 2/3 of 3/5, so you make new pieces. No common bottom needed.</p></div>
+      <div><h4>Why it matters</h4><p>Halving recipes, discounts, and scaling anything.</p></div>
+    </div>
 
-  <script>
+    <div class="ex"><span class="frac"><b>2</b><b>3</b></span><span class="op">×</span><span class="frac"><b>3</b><b>5</b></span><span class="op">=</span><span class="frac"><b>6</b><b>15</b></span><span class="op">=</span><span class="frac hl"><b>2</b><b>5</b></span></div>
 
-    /*
-      Where the proxy (the Cloudflare Worker in /proxy) lives.
-      Opening this file on your own computer uses the test
-      proxy from "npm run dev"; the real site uses the online one.
-    */
+    <div class="method">
+    <h3>Cross-cancel first (saves time)</h3>
+    <p>Before you multiply, look diagonally. If a top and a bottom share a factor, divide both by it.</p>
+    <div class="ex"><span class="frac"><b>4</b><b>9</b></span><span class="op">×</span><span class="frac"><b>3</b><b>8</b></span><span class="op">→</span><span class="frac"><b>1</b><b>3</b></span><span class="op">×</span><span class="frac"><b>1</b><b>2</b></span><span class="op">=</span><span class="frac hl"><b>1</b><b>6</b></span></div>
+    <p>4 and 8 share 4. 3 and 9 share 3. Smaller numbers, less simplifying at the end. <a href="#cancel" style="color:var(--accent)">Full cross-canceling lesson →</a></p>
+    </div>
 
-    const PROXY =
-      location.hostname === "localhost" ||
-      location.hostname === "127.0.0.1" ||
-      location.protocol === "file:"
-        ? "http://127.0.0.1:8787"
-        : "https://aiden-browser-proxy.aiden-browser-proxy-2.workers.dev";
+    <div class="method">
+    <h3>Whole numbers and mixed numbers</h3>
+    <ul>
+      <li>Whole number: put it over 1. 5 × 2/3 = 5/1 × 2/3 = 10/3.</li>
+      <li>Mixed number: make it improper first. 1 1/2 × 2/3 = 3/2 × 2/3 = 1.</li>
+    </ul>
+    <p>"Of" means multiply. Half of 3/4 is 1/2 × 3/4 = 3/8.</p>
+    </div>
 
+    <h3>In the classroom</h3>
+    <div class="class"><strong>Area model:</strong> draw a square. Shade 2/3 of it in vertical columns, then 3/5 in horizontal rows. The overlap is 6 out of 15 boxes, which is the answer.</div>
+    <div class="class"><strong>Predict first:</strong> before solving, ask "Will the answer be bigger or smaller than 2/3?" Multiplying by a fraction less than 1 makes things smaller. This catches a lot of wrong answers.</div>
+  </section>
 
-    /* What every error (wrong password, proxy down, login ran out) says */
+  <!-- DIVIDE -->
+  <section class="panel" id="divide" hidden>
+    <span class="tag">Lesson 4</span>
+    <h2>Dividing fractions</h2>
+    <p class="lede">Turn it into multiplication. Remember it as Keep, Change, Flip.</p>
+    <h3>Watch it step by step</h3>
+    <div class="anim" data-anim="div"></div>
+    <div class="why">
+      <div><h4>Steps</h4><ol><li>Keep the first fraction.</li><li>Change ÷ to ×.</li><li>Flip the second fraction.</li><li>Multiply and simplify.</li></ol></div>
+      <div><h4>Why</h4><p>Dividing by a number = multiplying by its flip. ÷ 2 is the same as × 1/2.</p></div>
+      <div><h4>Why it matters</h4><p>"How many fit?" questions, and solving equations in algebra.</p></div>
+    </div>
 
-    const CONTACT =
-      "Contact caterjake05@gmail.com";
+    <ol>
+      <li><b>Keep</b> the first fraction.</li>
+      <li><b>Change</b> ÷ to ×.</li>
+      <li><b>Flip</b> the second fraction (its reciprocal).</li>
+      <li>Multiply straight across and simplify.</li>
+    </ol>
+    <div class="ex"><span class="frac"><b>3</b><b>4</b></span><span class="op">÷</span><span class="frac"><b>2</b><b>5</b></span><span class="op">→</span><span class="frac"><b>3</b><b>4</b></span><span class="op">×</span><span class="frac"><b>5</b><b>2</b></span><span class="op">=</span><span class="frac hl"><b>15</b><b>8</b></span><span class="op">=</span><span class="hl">1</span><span class="frac hl"><b>7</b><b>8</b></span></div>
 
+    <div class="method">
+    <h3>Why flipping works</h3>
+    <p>Dividing asks "how many of these fit?" How many 1/2s fit in 3? Six. And 3 × 2/1 = 6. Flipping the divisor counts how many pieces fit in one whole, then scales it.</p>
+    </div>
 
-    const usernameInput =
-      document.getElementById("username");
+    <div class="method">
+    <h3>Watch out</h3>
+    <ul>
+      <li>Only flip the <em>second</em> fraction, never the first.</li>
+      <li>Convert mixed numbers to improper fractions <em>before</em> flipping.</li>
+      <li>You can cross-cancel, but only after you've flipped.</li>
+    </ul>
+    </div>
 
-    const passwordInput =
-      document.getElementById("password");
+    <h3>In the classroom</h3>
+    <div class="class"><strong>Call and response:</strong> teacher says "Keep!", class says "Change!", teacher says "Flip!" Do it out loud on the first 3 problems so it sticks.</div>
+    <div class="class"><strong>Pizza question:</strong> "You have 3/4 of a pizza. Each person gets 1/8. How many people eat?" Students draw it, then check with Keep Change Flip: 3/4 × 8/1 = 6.</div>
+    <div class="class"><strong>Exit ticket:</strong> one problem on a sticky note before leaving: 2/3 ÷ 4/9. (Answer: 3/2 or 1 1/2.)</div>
+  </section>
 
-    const message =
-      document.getElementById("message");
+  <!-- CROSS CANCEL -->
+  <section class="panel" id="cancel" hidden>
+    <span class="tag">Lesson 5</span>
+    <h2>Cross-canceling</h2>
+    <p class="lede">A shortcut for multiplying (and dividing) fractions. You simplify before you multiply, so you work with small numbers instead of big ones.</p>
+    <h3>Watch it step by step</h3>
+    <div class="anim" data-anim="cancel"></div>
+    <div class="why">
+      <div><h4>Steps</h4><ol><li>Flip first if dividing.</li><li>Check both diagonals.</li><li>Divide each pair by a shared factor.</li><li>Multiply across.</li></ol></div>
+      <div><h4>Why</h4><p>It's just simplifying early. Same answer, smaller numbers.</p></div>
+      <div><h4>Why it matters</h4><p>Fewer mistakes, faster on no-calculator tests.</p></div>
+    </div>
 
+    <h3>The steps</h3>
+    <ol>
+      <li>Write the problem as multiplication. If it's division, do Keep, Change, Flip first.</li>
+      <li>Look on the diagonals: the top-left with the bottom-right, and the top-right with the bottom-left.</li>
+      <li>If a pair shares a factor, divide both numbers by the biggest factor they share (the GCF). Cross them out and write the new numbers.</li>
+      <li>Multiply straight across with the new numbers. The answer is already simplified.</li>
+    </ol>
 
-    /*
-      The proxy gives us a token when the username and password
-      are right. We send it with every page so strangers can't use
-      the proxy. sessionStorage forgets it when the tab closes.
+    <h3>Example 1</h3>
+    <div class="ex"><span class="frac"><b>4</b><b>9</b></span><span class="op">×</span><span class="frac"><b>3</b><b>8</b></span></div>
+    <ul>
+      <li>Diagonal 1: <b>4</b> (top-left) and <b>8</b> (bottom-right) share 4. 4 ÷ 4 = 1, 8 ÷ 4 = 2.</li>
+      <li>Diagonal 2: <b>3</b> (top-right) and <b>9</b> (bottom-left) share 3. 3 ÷ 3 = 1, 9 ÷ 3 = 3.</li>
+    </ul>
+    <div class="ex"><span class="frac"><b>1</b><b>3</b></span><span class="op">×</span><span class="frac"><b>1</b><b>2</b></span><span class="op">=</span><span class="frac hl"><b>1</b><b>6</b></span></div>
+    <p>Without canceling you'd get 12/72 and have to simplify that. Same answer, more work.</p>
 
-      account = { token, username, role }   (role is "user" or "admin")
-    */
+    <div class="method">
+    <h3>Example 2: only one diagonal cancels</h3>
+    <div class="ex"><span class="frac"><b>5</b><b>6</b></span><span class="op">×</span><span class="frac"><b>9</b><b>7</b></span><span class="op">→</span><span class="frac"><b>5</b><b>2</b></span><span class="op">×</span><span class="frac"><b>3</b><b>7</b></span><span class="op">=</span><span class="frac hl"><b>15</b><b>14</b></span></div>
+    <p>9 and 6 share 3, so they become 3 and 2. 5 and 7 share nothing, so leave them alone. That's fine.</p>
+    </div>
 
-    let account = null;
+    <div class="method">
+    <h3>Example 3: with division</h3>
+    <div class="ex"><span class="frac"><b>2</b><b>3</b></span><span class="op">÷</span><span class="frac"><b>4</b><b>9</b></span><span class="op">→</span><span class="frac"><b>2</b><b>3</b></span><span class="op">×</span><span class="frac"><b>9</b><b>4</b></span><span class="op">→</span><span class="frac"><b>1</b><b>1</b></span><span class="op">×</span><span class="frac"><b>3</b><b>2</b></span><span class="op">=</span><span class="frac hl"><b>3</b><b>2</b></span></div>
+    <p>Flip first, then cancel. 2 and 4 share 2. 9 and 3 share 3.</p>
+    </div>
 
-    try {
-      account = JSON.parse(sessionStorage.getItem("account"));
-    } catch {
-      // Nothing saved, or storage blocked (private window)
+    <div class="method">
+    <h3>Rules to remember</h3>
+    <ul>
+      <li><b>Only for multiplying</b> (and dividing after you flip). Never cross-cancel when adding or subtracting.</li>
+      <li><b>Always a top with a bottom.</b> Never cancel two tops or two bottoms with each other across fractions.</li>
+      <li>You can also simplify straight up and down inside one fraction (6/8 → 3/4) before you start.</li>
+      <li>Canceling divides, it doesn't subtract. A number canceled all the way becomes 1, not 0.</li>
+      <li>With a whole number, put it over 1 first: 6 × 5/12 → 6/1 × 5/12 → 1/1 × 5/2 = 5/2.</li>
+    </ul>
+    </div>
+
+    <h3>In the classroom</h3>
+    <div class="class"><strong>Draw the X:</strong> have students draw a light X across the two fractions before they do anything. The X shows exactly which pairs to check, so nobody cancels two tops.</div>
+    <div class="class"><strong>Race the long way:</strong> split the room. Half solves 8/15 × 5/12 the long way, half cross-cancels first. Compare who finishes first and check that both get 2/9.</div>
+    <div class="class"><strong>Spot the error:</strong> put up 2/3 + 3/4 with the 3s "canceled" to get 2/1 + 1/4. Ask the class what went wrong. (You can't cancel when adding.)</div>
+  </section>
+
+  <!-- PRACTICE -->
+  <section class="panel" id="practice" hidden>
+    <span class="tag">Practice</span>
+    <h2>Practice problems</h2>
+    <p class="lede">Random problems. Type your answer in simplest form. Whole numbers go over 1 (like 2/1). Works on a projector for warm-ups too.</p>
+    <div class="chips" id="ops">
+      <button type="button" data-op="+" aria-pressed="true">Add</button>
+      <button type="button" data-op="-" aria-pressed="true">Subtract</button>
+      <button type="button" data-op="*" aria-pressed="true">Multiply</button>
+      <button type="button" data-op="/" aria-pressed="true">Divide</button>
+    </div>
+    <div class="ex prob" id="prob"></div>
+    <form class="answer" id="ansForm">
+      <input id="num" inputmode="numeric" aria-label="Numerator" placeholder="top">
+      <span style="font-size:22px;color:var(--muted)">/</span>
+      <input id="den" inputmode="numeric" aria-label="Denominator" placeholder="bottom">
+      <button class="btn" type="submit">Check</button>
+      <button class="btn ghost" type="button" id="showBtn">Show answer</button>
+      <button class="btn ghost" type="button" id="nextBtn">Next</button>
+    </form>
+    <div class="fb" id="fb" aria-live="polite"></div>
+    <div class="score" id="score">0 correct of 0</div>
+  </section>
+</main>
+
+<script>
+// smoke background
+(function(){
+  const c=document.getElementById('smoke'),x=c.getContext('2d');
+  const blobs=Array.from({length:9},()=>({x:Math.random(),y:Math.random(),r:.15+Math.random()*.25,dx:(Math.random()-.5)*.0004,dy:(Math.random()-.5)*.0004,a:.25+Math.random()*.35}));
+  const still=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function size(){c.width=innerWidth/2;c.height=innerHeight/2}
+  function draw(){
+    x.fillStyle='#0b0b0c';x.fillRect(0,0,c.width,c.height);
+    const m=Math.max(c.width,c.height);
+    for(const b of blobs){
+      b.x+=b.dx;b.y+=b.dy;if(b.x<-.1||b.x>1.1)b.dx*=-1;if(b.y<-.1||b.y>1.1)b.dy*=-1;
+      const g=x.createRadialGradient(b.x*c.width,b.y*c.height,0,b.x*c.width,b.y*c.height,b.r*m);
+      g.addColorStop(0,`rgba(90,90,95,${b.a})`);g.addColorStop(1,'rgba(90,90,95,0)');
+      x.fillStyle=g;x.fillRect(0,0,c.width,c.height);
     }
+    if(!still)requestAnimationFrame(draw);
+  }
+  size();addEventListener('resize',size);draw();
+})();
 
-    let token = account ? account.token : "";
+// routing
+const views=['add','subtract','multiply','divide','cancel','practice'];
+function route(){
+  const h=location.hash.slice(1);
+  views.forEach(v=>document.getElementById(v).hidden=v!==h);
+  document.getElementById('hint').hidden=views.includes(h);
+  document.querySelectorAll('.dock a').forEach(a=>a.setAttribute('aria-current',a.getAttribute('href')==='#'+h?'page':'false'));
+  if(views.includes(h)) document.getElementById(h).scrollIntoView({behavior:'smooth',block:'start'});
+}
+addEventListener('hashchange',route);route();
 
+// search
+const topics=[
+  ['Adding same denominators','add'],['Common denominator / LCD','add'],['Butterfly method','add'],['Fraction strips','add'],['Mixed numbers to improper fractions','add'],
+  ['Subtracting fractions','subtract'],['Borrowing with mixed numbers','subtract'],['Number line','subtract'],['Think-pair-share','subtract'],
+  ['Multiplying straight across','multiply'],['Cross-canceling','cancel'],['Cross cancel with division','cancel'],['Simplify before multiplying / GCF','cancel'],['Area model','multiply'],['"Of" means multiply','multiply'],
+  ['Keep Change Flip','divide'],['Reciprocal','divide'],['Why flipping works','divide'],['Exit ticket','divide'],
+  ['Practice problems','practice'],['Quiz / warm-up','practice']
+];
+const q=document.getElementById('q'),res=document.getElementById('results');
+q.addEventListener('input',()=>{
+  const s=q.value.trim().toLowerCase();
+  if(!s){res.hidden=true;return}
+  const hits=topics.filter(([t,v])=>t.toLowerCase().includes(s)||v.includes(s)).slice(0,6);
+  res.innerHTML=hits.length?hits.map(([t,v])=>`<button data-v="${v}">${t}<small>${v}</small></button>`).join(''):'<button disabled>No lessons match</button>';
+  res.hidden=false;
+});
+res.addEventListener('click',e=>{const b=e.target.closest('button[data-v]');if(!b)return;location.hash=b.dataset.v;res.hidden=true;q.value='';});
+q.addEventListener('keydown',e=>{if(e.key==='Enter'){const b=res.querySelector('button[data-v]');if(b)b.click();}if(e.key==='Escape')res.hidden=true;});
+document.addEventListener('click',e=>{if(!e.target.closest('.search'))res.hidden=true});
 
-    /* The token looks like "aiden.1790000000000.abc...": the middle part is the expiry time */
+// step-by-step animations
+(function(){
+  const NY=100,DY=148,BAR=114;
+  const T=(x,y,s,c='')=>`<text x="${x}" y="${y}" class="${c}">${s}</text>`;
+  const F=(x,n,d,o={})=>{const w=Math.max(String(n).length,String(d).length)*22+12;return `<g class="${o.c||''}">${T(x,NY,n,o.nc||'')}<line x1="${x-w/2}" x2="${x+w/2}" y1="${BAR}" y2="${BAR}"/>${T(x,DY,d,o.dc||'')}</g>`};
+  const O=(x,s,c='')=>`<g class="${c}">${T(x,126,s,'op')}</g>`;
+  const W=(x,s,c='')=>`<g class="${c}">${T(x,132,s,'whole')}</g>`;
+  const L=(x,y,s,c='')=>`<g class="${c}">${T(x,y,s,'lbl')}</g>`;
+  const R=(x,y,s,isNew=true)=>`<g class="hl${isNew?' new':''}">${T(x,y,s,'rep')}</g>`;
+  const S=(x,p,isNew=true)=>{const y=p==='n'?87:135;return `<line class="strike${isNew?' new':''}" x1="${x-17}" y1="${y+11}" x2="${x+17}" y2="${y-11}"/>`};
+  function A(x1,y1,x2,y2,b,lab=''){
+    const dx=x2-x1,dy=y2-y1,len=Math.hypot(dx,dy)||1,nx=-dy/len,ny=dx/len;
+    const cx=(x1+x2)/2+nx*b,cy=(y1+y2)/2+ny*b,mx=(x1+2*cx+x2)/4,my=(y1+2*cy+y2)/4;
+    let ux=x2-cx,uy=y2-cy;const ul=Math.hypot(ux,uy)||1;ux/=ul;uy/=ul;const px=-uy,py=ux;
+    const h=`${x2},${y2} ${x2-ux*11+px*6},${y2-uy*11+py*6} ${x2-ux*11-px*6},${y2-uy*11-py*6}`;
+    const s=Math.sign(b)||1,lx=mx+nx*s*16,ly=my+ny*s*16+6;
+    return `<g class="arrow"><path pathLength="1" d="M${x1},${y1} Q${cx},${cy} ${x2},${y2}"/><polygon points="${h}"/>${lab?`<text x="${lx}" y="${ly}">${lab}</text>`:''}</g>`;
+  }
 
-    function tokenIsFresh() {
+  const m0=[F(130,2,3),O(205,'×'),F(280,3,5),O(355,'=')];
+  const d0=[F(130,3,4),O(205,'÷'),F(280,2,5)];
+  const d1=[F(130,3,4),O(205,'×'),F(280,5,2)];
+  const a0=[F(90,1,4),O(160,'+'),F(230,2,3)];
+  const s0=[W(90,'3'),F(135,1,4),O(205,'−'),W(265,'1'),F(310,3,4)];
+  const s1=[W(90,'2'),F(135,5,4),O(205,'−'),W(265,'1'),F(310,3,4)];
 
-      return Number(token.split(".")[1]) > Date.now();
+  const SCENES={
+    add:[
+      {cap:'Here is 1/4 + 2/3. The bottoms are different (4 and 3), so the pieces are different sizes. We can\'t add yet.',els:[...a0]},
+      {cap:'Find the LCD. Count by 4s and by 3s until they match. Both hit 12 first, so 12 is the new bottom.',els:[...a0,L(340,40,'LCD = 12','new'),L(340,205,'4, 8, 12   ·   3, 6, 9, 12','new')]},
+      {cap:'Change 1/4 into twelfths. 4 × 3 = 12, so multiply the top by 3 too. 1/4 = 3/12.',els:[...a0,O(310,'→'),A(90,64,400,64,-55,'× 3'),A(90,162,400,162,55,'× 3'),F(400,3,12,{c:'hl new'})]},
+      {cap:'Change 2/3 into twelfths. 3 × 4 = 12, so 2 × 4 = 8. 2/3 = 8/12.',els:[...a0,O(310,'→'),F(400,3,12,{c:'hl'}),O(475,'+','new'),A(230,64,550,64,-55,'× 4'),A(230,162,550,162,55,'× 4'),F(550,8,12,{c:'hl new'})]},
+      {cap:'Now the pieces match. Add the tops: 3 + 8 = 11. The bottom stays 12. Answer: 11/12.',els:[F(130,3,12),O(205,'+'),F(280,8,12),O(355,'='),A(130,64,280,64,-50,'3 + 8 = 11'),F(440,11,12,{c:'g new'}),L(440,205,'bottom stays 12','new')]}
+    ],
+    sub:[
+      {cap:'Here is 3 1/4 − 1 3/4. Check the fractions first: 1/4 is smaller than 3/4, so we can\'t take 3/4 away yet.',els:[...s0]},
+      {cap:'Borrow 1 from the 3, so it becomes 2. That 1 whole is 4/4. Add it to the fraction: 1/4 + 4/4 = 5/4.',els:[W(90,'2','hl new'),F(135,5,4,{c:'hl new'}),O(205,'−'),W(265,'1'),F(310,3,4),A(90,92,128,62,-30,'borrow 1 = 4/4')]},
+      {cap:'Subtract the wholes: 2 − 1 = 1. Subtract the tops: 5 − 3 = 2. Keep the bottom 4. That gives 1 2/4.',els:[...s1,A(90,150,265,150,55,'2 − 1'),A(135,64,310,64,-50,'5 − 3'),O(375,'='),W(430,'1','hl new'),F(475,2,4,{c:'hl new'})]},
+      {cap:'Simplify 2/4. Both numbers divide by 2, so 2/4 = 1/2. Final answer: 1 1/2.',els:[...s1,O(375,'='),W(430,'1','hl'),F(475,2,4,{c:'hl'}),O(540,'='),A(475,64,640,64,-45,'÷ 2'),A(475,162,640,162,45,'÷ 2'),W(595,'1','g new'),F(640,1,2,{c:'g new'})]}
+    ],
+    mult:[
+      {cap:'Here is 2/3 × 3/5. When you multiply, the bottoms don\'t need to match.',els:[...m0,O(440,'?','dim')]},
+      {cap:'Multiply the tops straight across: 2 × 3 = 6.',els:[...m0,A(130,64,280,64,-50,'2 × 3 = 6'),F(440,6,'?',{nc:'hl new',dc:'dim'})]},
+      {cap:'Multiply the bottoms straight across: 3 × 5 = 15. Now we have 6/15.',els:[...m0,A(130,162,280,162,50,'3 × 5 = 15'),F(440,6,15,{nc:'hl',dc:'hl new'})]},
+      {cap:'Simplify. 6 and 15 both divide by 3, so 6/15 = 2/5. Final answer: 2/5.',els:[...m0,F(440,6,15,{c:'hl'}),O(520,'='),A(440,64,600,64,-45,'÷ 3'),A(440,162,600,162,45,'÷ 3'),F(600,2,5,{c:'g new'})]}
+    ],
+    div:[
+      {cap:'Here is 3/4 ÷ 2/5. Dividing fractions directly is hard, so we turn it into multiplying.',els:[...d0]},
+      {cap:'KEEP the first fraction exactly how it is.',els:[F(130,3,4,{c:'hl new'}),O(205,'÷'),F(280,2,5),L(130,40,'KEEP','new')]},
+      {cap:'CHANGE the ÷ sign into ×.',els:[F(130,3,4,{c:'hl'}),O(205,'×','hl new'),F(280,2,5),L(130,40,'KEEP'),L(205,40,'CHANGE','new')]},
+      {cap:'FLIP the second fraction. The top and bottom swap, so 2/5 becomes 5/2.',els:[F(130,3,4,{c:'hl'}),O(205,'×','hl'),F(280,5,2,{c:'hl new'}),L(130,40,'KEEP'),L(205,40,'CHANGE'),L(280,40,'FLIP','new'),A(302,88,302,136,-28),A(258,136,258,88,-28)]},
+      {cap:'Now multiply straight across. Tops: 3 × 5 = 15. Bottoms: 4 × 2 = 8. That gives 15/8.',els:[...d1,O(355,'='),A(130,64,280,64,-50,'3 × 5 = 15'),A(130,162,280,162,50,'4 × 2 = 8'),F(440,15,8,{c:'hl new'})]},
+      {cap:'15/8 is top-heavy. 8 goes into 15 one time with 7 left over, so the answer is 1 7/8.',els:[...d1,O(355,'='),F(440,15,8,{c:'hl'}),O(520,'='),A(440,162,600,162,45,'8 fits in 15 once, 7 left'),W(573,'1','g new'),F(612,7,8,{c:'g new'})]}
+    ],
+    cancel:[
+      {cap:'Here is 4/9 × 3/8. Before multiplying, check the two diagonals (picture an X across the fractions).',els:[F(220,4,9),O(300,'×','dim'),F(380,3,8),L(300,212,'check the diagonals','new')]},
+      {cap:'First diagonal: 4 and 8 both divide by 4. Cross them out. 4 becomes 1 and 8 becomes 2.',els:[F(220,4,9,{nc:'dim'}),O(300,'×','dim'),F(380,3,8,{dc:'dim'}),S(220,'n'),S(380,'d'),R(190,62,'1'),R(410,178,'2'),A(238,92,362,130,0),L(300,212,'4 and 8 both ÷ 4','new')]},
+      {cap:'Second diagonal: 3 and 9 both divide by 3. Cross them out. 3 becomes 1 and 9 becomes 3.',els:[F(220,4,9,{nc:'dim',dc:'dim'}),O(300,'×','dim'),F(380,3,8,{nc:'dim',dc:'dim'}),S(220,'n',false),S(380,'d',false),R(190,62,'1',false),R(410,178,'2',false),S(380,'n'),S(220,'d'),R(410,62,'1'),R(190,178,'3'),A(362,92,238,130,0),L(300,212,'3 and 9 both ÷ 3','new')]},
+      {cap:'Multiply the new small numbers: 1 × 1 = 1 and 3 × 2 = 6. Answer: 1/6, already in simplest form.',els:[F(130,1,3),O(205,'×'),F(280,1,2),O(355,'='),A(130,64,280,64,-50,'1 × 1'),A(130,162,280,162,50,'3 × 2'),F(440,1,6,{c:'g new'})]}
+    ]
+  };
 
+  function mount(el){
+    const steps=SCENES[el.dataset.anim];if(!steps)return;
+    let i=0,timer=null;
+    el.innerHTML=`<svg viewBox="0 0 680 225" role="img" aria-label="Step-by-step example"></svg><div class="cap"><span class="cnt"></span><p aria-live="polite"></p></div><div class="ctl"><button type="button" class="btn ghost" data-a="back">Back</button><button type="button" class="btn" data-a="next">Next step</button><button type="button" class="btn ghost" data-a="play">Play</button><button type="button" class="btn ghost" data-a="reset">Restart</button><div class="dots">${steps.map(()=>'<i></i>').join('')}</div></div>`;
+    const svg=el.querySelector('svg'),cnt=el.querySelector('.cnt'),cap=el.querySelector('.cap p'),b=a=>el.querySelector(`[data-a="${a}"]`),dots=[...el.querySelectorAll('.dots i')];
+    function render(){
+      svg.innerHTML=steps[i].els.join('');
+      cnt.textContent=`Step ${i+1} of ${steps.length}`;cap.textContent=steps[i].cap;
+      b('back').disabled=i===0;b('next').disabled=i===steps.length-1;
+      dots.forEach((d,k)=>d.classList.toggle('on',k===i));
     }
-
-
-    function showBrowser() {
-
-      document.getElementById("accountName").textContent =
-        account.username;
-
-      document.getElementById("adminBadge").hidden =
-        account.role !== "admin";
-
-      document.getElementById("login").style.display =
-        "none";
-
-      document.getElementById("adminPanel").hidden =
-        true;
-
-      document.getElementById("browser").style.display =
-        "flex";
-
-    }
-
-
-    /* Admins land on the admin panel, everyone else on the browser */
-
-    function showStart() {
-
-      if (account.role === "admin") {
-        showPanel();
-      } else {
-        showBrowser();
-      }
-
-    }
-
-
-    /* errorText: what to show under the login box (empty for a normal log out) */
-
-    function showLogin(errorText = "") {
-
-      account = null;
-
-      token = "";
-
-      try {
-        sessionStorage.removeItem("account");
-      } catch {}
-
-      goHome();
-
-      passwordInput.value = "";
-
-      message.style.color = "#ff0055";
-      message.textContent = errorText;
-
-      document.getElementById("browser").style.display =
-        "none";
-
-      document.getElementById("adminPanel").hidden =
-        true;
-
-      document.getElementById("login").style.display =
-        "flex";
-
-    }
-
-
-    /* LOGIN (the username and password are checked by the proxy, not here) */
-
-    async function login() {
-
-      message.style.color = "#ddd";
-      message.textContent = "Checking...";
-
-      let response;
-
-      try {
-
-        response = await fetch(PROXY + "/login", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            username: usernameInput.value,
-            password: passwordInput.value
-          })
-        });
-
-      } catch {
-
-        message.style.color = "#ff0055";
-        message.textContent =
-          CONTACT;
-
-        return;
-
-      }
-
-
-      if (response.ok) {
-
-        account = await response.json();
-
-        token = account.token;
-
-        passwordInput.value = "";
-
-        try {
-          sessionStorage.setItem("account", JSON.stringify(account));
-        } catch {}
-
-        message.style.color = "#00ffcc";
-        message.textContent = "Access Granted!";
-
-        setTimeout(showStart, 400);
-
-      } else {
-
-        /*
-          If an admin disabled this login or changed the password,
-          the proxy sends back the reason they typed.
-        */
-
-        const data = await response.json().catch(() => ({}));
-
-        message.style.color = "#ff0055";
-        message.textContent =
-          data.reason
-            ? "Reason: " + data.reason + "\n" + CONTACT
-            : CONTACT;
-
-      }
-
-    }
-
-
-
-    /* =========================
-       ADMIN PANEL
-    ========================= */
-
-    const panelMessage =
-      document.getElementById("panelMessage");
-
-
-    function showPanel() {
-
-      document.getElementById("login").style.display =
-        "none";
-
-      document.getElementById("browser").style.display =
-        "none";
-
-      document.getElementById("adminPanel").hidden =
-        false;
-
-      loadUsers();
-
-    }
-
-
-    function say(text, isError = false) {
-
-      panelMessage.style.color = isError ? "#ff0055" : "#00ffcc";
-      panelMessage.textContent = text;
-
-    }
-
-
-    /*
-      Calls an /admin route on the proxy with our token.
-      Leave out body to read (GET), pass one to change something (POST).
-    */
-
-    async function adminRequest(path, body) {
-
-      let response;
-
-      try {
-
-        response = await fetch(PROXY + "/admin/" + path, {
-          method: body ? "POST" : "GET",
-          headers: {
-            "Authorization": "Bearer " + token,
-            "Content-Type": "application/json"
-          },
-          body: body ? JSON.stringify(body) : undefined
-        });
-
-      } catch {
-
-        say(CONTACT, true);
-        return null;
-
-      }
-
-
-      const data = await response.json().catch(() => ({}));
-
-      /* Our login ran out or isn't an admin anymore */
-      if (response.status === 403) {
-        showLogin(CONTACT);
-        return null;
-      }
-
-      if (!response.ok) {
-        say(data.error || CONTACT, true);
-        return null;
-      }
-
-      return data;
-
-    }
-
-
-    async function loadUsers() {
-
-      const data = await adminRequest("users");
-
-      if (!data) return;
-
-      const list = document.getElementById("userList");
-
-      list.replaceChildren(...data.users.map(userCard));
-
-    }
-
-
-    /* Builds one account's card. textContent keeps names and reasons from running as HTML. */
-
-    function userCard(user) {
-
-      const card = document.createElement("div");
-      card.className = "userRow" + (user.disabled ? " off" : "");
-
-
-      const info = document.createElement("div");
-      info.className = "userInfo";
-
-      const name = document.createElement("b");
-      name.textContent = user.username;
-
-      const status = document.createElement("span");
-      status.className = "status";
-      status.textContent = user.disabled
-        ? "Disabled" + (user.reason ? ": " + user.reason : "")
-        : "Active";
-
-      info.append(name);
-
-      if (user.role === "admin") {
-        const badge = document.createElement("span");
-        badge.className = "panelButton";
-        badge.style.cssText = "height:auto;padding:2px 7px;font-size:11px;cursor:default";
-        badge.textContent = "ADMIN";
-        info.append(badge);
-      }
-
-      info.append(status);
-
-
-      const reason = document.createElement("input");
-      reason.className = "panelInput";
-      reason.placeholder = "Reason (they see this when they try to log in)";
-      reason.maxLength = 200;
-
-
-      const actions = document.createElement("div");
-      actions.className = "userActions";
-
-      const newPassword = document.createElement("input");
-      newPassword.className = "panelInput";
-      newPassword.placeholder = "New password";
-      newPassword.autocomplete = "off";
-
-      const changeButton = document.createElement("button");
-      changeButton.className = "panelButton";
-      changeButton.textContent = "Change password";
-
-      changeButton.onclick = async () => {
-
-        if (!newPassword.value) {
-          say("Type a new password for " + user.username + " first.", true);
-          return;
-        }
-
-        const done = await adminRequest("password", {
-          username: user.username,
-          password: newPassword.value,
-          reason: reason.value
-        });
-
-        if (done) {
-          say("Changed " + user.username + "'s password.");
-          loadUsers();
-        }
-
-      };
-
-      actions.append(newPassword, changeButton);
-
-
-      /* You can't disable your own account (you'd be locked out) */
-
-      if (user.username !== account.username) {
-
-        const toggleButton = document.createElement("button");
-        toggleButton.className = "panelButton " + (user.disabled ? "plain" : "danger");
-        toggleButton.textContent = user.disabled ? "Enable login" : "Disable login";
-
-        toggleButton.onclick = async () => {
-
-          const done = await adminRequest("disable", {
-            username: user.username,
-            disabled: !user.disabled,
-            reason: reason.value
-          });
-
-          if (done) {
-            say((user.disabled ? "Enabled " : "Disabled ") + user.username + ".");
-            loadUsers();
-          }
-
-        };
-
-        actions.append(toggleButton);
-
-      }
-
-
-      card.append(info, reason, actions);
-
-      return card;
-
-    }
-
-
-    /* Still logged in from earlier? Skip the login screen. */
-
-    if (token && tokenIsFresh()) {
-      showStart();
-    }
-
-
-    document
-      .getElementById("loginButton")
-      .addEventListener("click", login);
-
-
-    /* Enter in the username box moves to the password; in the password box it logs in */
-
-    usernameInput.addEventListener("keydown", event => {
-
-      if (event.key === "Enter") {
-        passwordInput.focus();
-      }
-
-    });
-
-
-    passwordInput.addEventListener("keydown", event => {
-
-      if (event.key === "Enter") {
-        login();
-      }
-
-    });
-
-
-    /* =========================
-       BROWSER FUNCTIONS
-    ========================= */
-
-    /*
-      Our own history list.
-
-      We can't read the iframe's real history
-      (the browser blocks that for other websites),
-      so we remember every page ourselves.
-
-      historyList  = every address we've visited
-      historyIndex = which one we're on right now
-                     (-1 means the home screen)
-    */
-
-    let historyList = [];
-    let historyIndex = -1;
-
-    /* True while a page we asked for is loading */
-    let waitingForPage = false;
-
-
-    function navigate() {
-
-      let address =
-        document.getElementById("url").value.trim();
-
-      if (!address) return;
-
-
-      /*
-        If the user doesn't type a protocol,
-        assume HTTPS.
-      */
-
-      if (
-        !address.startsWith("http://") &&
-        !address.startsWith("https://")
-      ) {
-
-        /*
-          Treat normal text as a Bing search.
-          (Google blocks being shown in an iframe,
-          but Bing allows it.)
-        */
-
-        if (
-          !address.includes(".") ||
-          address.includes(" ")
-        ) {
-
-          address =
-            "https://www.bing.com/search?q=" +
-            encodeURIComponent(address);
-
-        } else {
-
-          address = "https://" + address;
-
-        }
-
-      }
-
-
-      /*
-        If we went back and then visit a new page,
-        the old "forward" pages get thrown away
-        (that's how real browsers work too).
-      */
-
-      historyList = historyList.slice(0, historyIndex + 1);
-
-      historyList.push(address);
-
-      historyIndex = historyList.length - 1;
-
-      showPage(address);
-
-    }
-
-
-    /* Show a website (doesn't touch history) */
-
-    function showPage(address) {
-
-      const iframe =
-        document.getElementById("webview");
-
-
-      document.getElementById("home").style.display = "none";
-
-      document.getElementById("notice").hidden = false;
-
-      iframe.style.display = "block";
-
-      /* Load it through the proxy so frame-blocking headers get removed */
-      iframe.src = PROXY + "/p/" + token + "/" + address;
-
-      waitingForPage = true;
-
-      document.getElementById("url").value = address;
-
-      /* Put the site's name on the tab, like "wikipedia.org" */
-      document.getElementById("tabTitle").textContent =
-        "🌐 " + new URL(address).hostname.replace("www.", "");
-
-      updateButtons();
-
-    }
-
-
-    /* Go back to the home screen */
-
-    function goHome() {
-
-      const iframe =
-        document.getElementById("webview");
-
-
-      iframe.style.display = "none";
-
-      iframe.src = "about:blank";
-
-      waitingForPage = false;
-
-      document.getElementById("home").style.display = "flex";
-
-      document.getElementById("notice").hidden = true;
-
-      document.getElementById("url").value = "";
-
-      document.getElementById("tabTitle").textContent =
-        "🌐 Aiden's Browser";
-
-      historyIndex = -1;
-
-      updateButtons();
-
-    }
-
-
-    /* Grey out back/forward when you can't use them */
-
-    function updateButtons() {
-
-      document.getElementById("backButton").disabled =
-        historyIndex < 0;
-
-      document.getElementById("forwardButton").disabled =
-        historyIndex >= historyList.length - 1;
-
-    }
-
-
-    /* ENTER IN ADDRESS BAR */
-
-    document
-      .getElementById("url")
-      .addEventListener("keydown", event => {
-
-        if (event.key === "Enter") {
-          navigate();
-        }
-
-      });
-
-
-    function back() {
-
-      if (historyIndex > 0) {
-
-        historyIndex--;
-
-        showPage(historyList[historyIndex]);
-
-      } else if (historyIndex === 0) {
-
-        /* Going back from the first page = home screen */
-        goHome();
-
-      }
-
-    }
-
-
-    function forward() {
-
-      if (historyIndex < historyList.length - 1) {
-
-        historyIndex++;
-
-        showPage(historyList[historyIndex]);
-
-      }
-
-    }
-
-
-    function reload() {
-
-      if (historyIndex >= 0) {
-        showPage(historyList[historyIndex]);
-      }
-
-    }
-
-
-    /*
-      Messages from the proxy's helper script inside the page.
-
-      "aiden-page"   = a page finished loading (maybe because
-                       you clicked a link inside it)
-      "aiden-logout" = the login token ran out
-    */
-
-    window.addEventListener("message", event => {
-
-      const iframe =
-        document.getElementById("webview");
-
-      /* Only trust messages from our proxy, in our iframe */
-      if (
-        event.origin !== new URL(PROXY).origin ||
-        event.source !== iframe.contentWindow
-      ) return;
-
-
-      const data = event.data || {};
-
-      if (data.type === "aiden-logout") {
-        showLogin(CONTACT);
+    function stop(){clearInterval(timer);timer=null;b('play').textContent='Play'}
+    el.addEventListener('click',e=>{
+      const a=e.target.closest('button')?.dataset.a;if(!a)return;
+      if(a==='play'){
+        if(timer){stop();return}
+        if(i===steps.length-1){i=0;render()}
+        b('play').textContent='Pause';
+        timer=setInterval(()=>{if(i<steps.length-1){i++;render()}if(i===steps.length-1)stop()},3400);
         return;
       }
-
-      if (data.type !== "aiden-page") return;
-
-
-      const address = data.url;
-
-      if (waitingForPage) {
-
-        /* A page we asked for. If it redirected
-           (wikipedia.org -> www.wikipedia.org), save the real address. */
-        historyList[historyIndex] = address;
-
-      } else if (address !== historyList[historyIndex]) {
-
-        /* You clicked a link inside the page: that's a new history entry */
-        historyList = historyList.slice(0, historyIndex + 1);
-
-        historyList.push(address);
-
-        historyIndex = historyList.length - 1;
-
-      }
-
-      waitingForPage = false;
-
-      document.getElementById("url").value = address;
-
-      /* Use the page's own title on the tab, or its site name */
-      document.getElementById("tabTitle").textContent =
-        "🌐 " + (data.title || new URL(address).hostname.replace("www.", ""));
-
-      updateButtons();
-
+      stop();
+      if(a==='next'&&i<steps.length-1)i++;
+      if(a==='back'&&i>0)i--;
+      if(a==='reset')i=0;
+      render();
     });
+    render();
+  }
+  document.querySelectorAll('.anim[data-anim]').forEach(mount);
+})();
 
-
-    /* For sites that don't work well through the proxy */
-
-    function openInNewTab() {
-
-      if (historyIndex >= 0) {
-
-        /* "noopener" stops the new page from being
-           able to control this page (a safety habit) */
-        window.open(historyList[historyIndex], "_blank", "noopener");
-
-      }
-
-    }
-
-  </script>
+// practice
+const gcd=(a,b)=>b?gcd(b,a%b):Math.abs(a);
+const rnd=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+const F=(n,d)=>`<span class="frac"><b>${n}</b><b>${d}</b></span>`;
+let cur,right=0,total=0;
+function newProb(){
+  const ops=[...document.querySelectorAll('#ops button[aria-pressed="true"]')].map(b=>b.dataset.op);
+  const op=ops[rnd(0,ops.length-1)]||'+';
+  let a=rnd(1,6),b=rnd(2,9),c=rnd(1,6),d=rnd(2,9);
+  if(a>=b)a=b-1; if(c>=d)c=d-1;
+  if(op==='-'&&a*d<c*b){[a,b,c,d]=[c,d,a,b]}
+  if(op==='-'&&a*d===c*b){c=Math.max(1,c-1)}
+  let n,m;
+  if(op==='+'){n=a*d+c*b;m=b*d}else if(op==='-'){n=a*d-c*b;m=b*d}else if(op==='*'){n=a*c;m=b*d}else{n=a*d;m=b*c}
+  const g=gcd(n,m)||1;cur={n:n/g,m:m/g};
+  const sym={'+':'+','-':'−','*':'×','/':'÷'}[op];
+  document.getElementById('prob').innerHTML=`${F(a,b)}<span class="op">${sym}</span>${F(c,d)}<span class="op">=</span><span class="op">?</span>`;
+  document.getElementById('num').value='';document.getElementById('den').value='';
+  const fb=document.getElementById('fb');fb.textContent='';fb.className='fb';
+}
+document.getElementById('ops').addEventListener('click',e=>{
+  const b=e.target.closest('button');if(!b)return;
+  const on=b.getAttribute('aria-pressed')==='true';
+  if(on&&document.querySelectorAll('#ops [aria-pressed="true"]').length===1)return;
+  b.setAttribute('aria-pressed',String(!on));newProb();
+});
+document.getElementById('ansForm').addEventListener('submit',e=>{
+  e.preventDefault();
+  const n=parseInt(document.getElementById('num').value),m=parseInt(document.getElementById('den').value)||1;
+  const fb=document.getElementById('fb');
+  if(isNaN(n)){fb.textContent='Type a number on top first.';fb.className='fb no';return}
+  total++;
+  if(n===cur.n&&m===cur.m){right++;fb.textContent='Correct!';fb.className='fb ok'}
+  else if(n*cur.m===m*cur.n){fb.textContent='Right value, but simplify it.';fb.className='fb no';total--}
+  else{fb.textContent='Not quite. Try again or show the answer.';fb.className='fb no'}
+  document.getElementById('score').textContent=`${right} correct of ${total}`;
+});
+document.getElementById('showBtn').onclick=()=>{const fb=document.getElementById('fb');fb.textContent=`Answer: ${cur.n}/${cur.m}`+(cur.n>cur.m&&cur.m>1?` (${Math.floor(cur.n/cur.m)} ${cur.n%cur.m}/${cur.m})`:'');fb.className='fb'};
+document.getElementById('nextBtn').onclick=newProb;
+newProb();
+</script>
 
 </body>
 </html>
